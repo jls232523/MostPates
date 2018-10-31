@@ -1,4 +1,4 @@
-package orgs.mostpates.checkout;
+package org.mostpates.checkout;
 
 import java.util.ArrayList;
 import java.util.HashMap;

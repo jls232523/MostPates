@@ -1,8 +1,7 @@
 package org.mostpates.people;
 
+import org.mostpates.checkout.*;
 import org.mostpates.shops.Item;
-
-import orgs.mostpates.checkout.*;
 
 public class Customer {
 	public String name;

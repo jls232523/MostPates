@@ -1,4 +1,4 @@
-package orgs.mostpates.checkout;
+package org.mostpates.checkout;
 
 public class Coupon {
 	String code;
