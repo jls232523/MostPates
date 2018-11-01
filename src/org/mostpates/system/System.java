@@ -28,7 +28,7 @@ public class System {
 		
 		return null;
 	}
-	public Customer getCustomer() {
+	public Customer getCustomer(String commandList) {
 		
 		return null;
 	}
