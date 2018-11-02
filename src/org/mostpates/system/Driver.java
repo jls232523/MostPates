@@ -28,15 +28,24 @@ public class Driver {
 		
 		
 		mySystem.addRestaurant(r1);
+		r1.setName("JapaPohns");
 		mySystem.addRestaurant(r2);
+		r2.setName("McD");
 		mySystem.addRestaurant(r3);
+		r3.setName("BBQ Wings");
 		mySystem.addRestaurant(r4);
+		r4.setName("SingWtop");
 		mySystem.addRestaurant(r5);
+		r5.setName("KurgerBing");
 		mySystem.addRestaurant(r6);
+		r6.setName("GactusCrille");
 		
 		mySystem.addCustomer(c1);
+		c1.setName("Josh");
 		mySystem.addCustomer(c2);
+		c2.setName("Jessica");
 		mySystem.addCustomer(c3);
+		c3.setName("Nadine");
 		
 		Scanner in = null;
 		String command = null;
