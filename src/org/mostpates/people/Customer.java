@@ -43,9 +43,17 @@ public class Customer {
 		//TODO FIXME
 	}
 	public void addToCart(Item newItem) {
-		//TODO FIXME
+		this.getCart().addItem(newItem);
 	}
 	public ShoppingCart getCart() {
 		return cart;
+	}
+	public void order() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void removeFromCart(Item newItem) {
+		this.getCart().removeItem(newItem);
+		
 	}
 }

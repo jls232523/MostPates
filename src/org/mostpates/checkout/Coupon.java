@@ -13,4 +13,8 @@ public class Coupon {
 	public double getPercentageOff() {
 		return this.percentOff;
 	}
+	public static void checkValid(String string) {
+		
+		
+	}
 }

@@ -8,8 +8,8 @@
 AddItem,Josh,Pizza,JapaPohns
 AddItem,Josh,Orange Juice,JapaPohns, #should be an error no oj at papajohns
 AddItem,Jessica,Spagettie and Meatballs,GliveOardin
-AddItem,Nadine,BBQ Wings, SingWtop
-RemoveItem,Nadine,BBQ Wings
+AddItem,Nadine,BBQ Wings,SingWtop
+RemoveItem,Nadine,BBQ Wings,SingWtop
 AddItem,Nadine,Coke,McD
 Total,Josh
 Total,Nadine
@@ -17,11 +17,11 @@ Total,Jessica
 Coupon,Josh,WILDCATS
 Coupon,Nadine,DOOR,#should be an error no coupon called door
 Total,Josh
-RemoveItem,Nadine,Coke
+RemoveItem,Nadine,Coke,McD
 Order,Josh
 Order,Nadine,#should be an error no items in cart
 Order,Jessica
 Status,Josh
 Status,Jessica
-Status,Nadine,#should be error b.c no order placed
+Status,Nadine,
  

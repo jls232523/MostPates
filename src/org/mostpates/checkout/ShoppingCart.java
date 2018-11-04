@@ -20,4 +20,12 @@ public class ShoppingCart {
 	public List<Item> getItems() {
 		return this.cart;
 	}
+	public String getTotal() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void removeItem(Item i) {
+		cart.remove(i);
+		
+	}
 }
