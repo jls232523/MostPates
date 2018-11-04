@@ -21,8 +21,11 @@ public class ShoppingCart {
 		return this.cart;
 	}
 	public String getTotal() {
-		// TODO Auto-generated method stub
-		return null;
+		double total= 0.0;
+		for(Item i : this.getItems()) {
+			total = total + i.getPrice();
+		}
+		return Double.toString(total);
 	}
 	public void removeItem(Item i) {
 		cart.remove(i);

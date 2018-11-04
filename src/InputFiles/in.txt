@@ -23,5 +23,5 @@ Order,Nadine,#should be an error no items in cart
 Order,Jessica
 Status,Josh
 Status,Jessica
-Status,Nadine,
+Status,Nadine
  

@@ -163,7 +163,7 @@ public class Driver {
 					case "Status":
 						System.out.println("Status");
 						c = mySystem.getCustomer(commandList[1]);
-						System.out.print("Your Items: ");
+						System.out.print(c.getName() + "'s Items: ");
 						for(Item i : c.getCart().getItems()) {
 							System.out.print(i.getName() + " ");
 						}
