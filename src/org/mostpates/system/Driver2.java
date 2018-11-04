@@ -46,17 +46,17 @@ public class Driver2 {
 		while(userIn.toLowerCase().compareTo("exit")!=0) {
 			r.printMenu();
 			flag = 0;
-			System.out.println("Which Item do you want?(or cart to see cart,order to place order,coupon to enter coupon code,back to go back to restaurants,or exit to cancel order and exit");
+			System.out.println("Which Item do you want?(or cart to see cart,order to place order,coupon to enter coupon code,back to go back to restaurants,remove to remove an item or exit to cancel order and exit");
 			userIn = in.nextLine().toLowerCase();
 			if(userIn.toLowerCase().compareTo("exit")==0) {
 				break;
 			}
-			if(!(userIn.toLowerCase().compareTo("cart")==0 ||userIn.toLowerCase().compareTo("order")==0 ||userIn.toLowerCase().compareTo("coupon")==0 ||userIn.toLowerCase().compareTo("exit")==0||userIn.toLowerCase().compareTo("back")==0)) {
+			if(!(userIn.toLowerCase().compareTo("cart")==0 ||userIn.toLowerCase().compareTo("order")==0 ||userIn.toLowerCase().compareTo("coupon")==0 ||userIn.toLowerCase().compareTo("exit")==0||userIn.toLowerCase().compareTo("back")==0||userIn.toLowerCase().compareTo("remove")==0)) {
 			i = r.getItem(userIn);
 			while(i==null) {
 				System.out.println("Not a valid choice please pick again");
 				userIn = in.nextLine().toLowerCase();
-				if((userIn.toLowerCase().compareTo("cart")==0 ||userIn.toLowerCase().compareTo("order")==0 ||userIn.toLowerCase().compareTo("coupon")==0 ||userIn.toLowerCase().compareTo("exit")==0||userIn.toLowerCase().compareTo("back")==0)) {
+				if((userIn.toLowerCase().compareTo("cart")==0 ||userIn.toLowerCase().compareTo("order")==0 ||userIn.toLowerCase().compareTo("coupon")==0 ||userIn.toLowerCase().compareTo("exit")==0||userIn.toLowerCase().compareTo("back")==0||userIn.toLowerCase().compareTo("remove")==0)) {
 					flag = 1;
 					break;
 				}
@@ -68,10 +68,38 @@ public class Driver2 {
 			}
 			if(userIn.toLowerCase().compareTo("cart")==0) {
 				c1.getCart().printCart();
+				System.out.println("Current Total is $"+c1.getCart().getTotal());
 				System.out.println("\n\n");
+			}
+			if(userIn.toLowerCase().compareTo("remove")==0) {
+				c1.getCart().printCart();
+				if(c1.getCart().getItems().size()==0) {
+					System.out.println("No items in cart cannot remove");
+				}
+				else {
+				System.out.println("Which item do you want to remove?");
+				userIn = in.nextLine().toLowerCase();
+				i = r.getItem(userIn);
+				while(!(c1.getCart().getItems().contains(i))) {
+					System.out.println("Not a valid choice please pick again");
+					userIn = in.nextLine().toLowerCase();
+					if((userIn.toLowerCase().compareTo("cart")==0 ||userIn.toLowerCase().compareTo("order")==0 ||userIn.toLowerCase().compareTo("coupon")==0 ||userIn.toLowerCase().compareTo("exit")==0||userIn.toLowerCase().compareTo("back")==0||userIn.toLowerCase().compareTo("remove")==0)) {
+						flag = 1;
+						break;
+					}
+					i = r.getItem(userIn);
+				}
+				if(flag==0) {
+				System.out.println(i.getName() + " Successfully removed from cart.");
+				c1.removeFromCart(i);
+				c1.getCart().printCart();
+				}
+				}
+				
 			}
 			if(userIn.toLowerCase().compareTo("order")==0) {
 				c1.order();
+				break;
 			}
 			if(userIn.toLowerCase().compareTo("coupon")==0) {
 				Coupon temp = c1.getCoupon();
