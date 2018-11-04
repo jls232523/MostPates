@@ -50,7 +50,8 @@ public class Customer {
 		return cart;
 	}
 	public void order() {
-		// TODO Auto-generated method stub
+		// TODO FIXME
+		System.out.println("***ORDER PLACED***");
 		
 	}
 	public void removeFromCart(Item newItem) {

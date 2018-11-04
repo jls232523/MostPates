@@ -71,8 +71,7 @@ public class Driver2 {
 				System.out.println("\n\n");
 			}
 			if(userIn.toLowerCase().compareTo("order")==0) {
-				c1.getCart().printCart();
-				System.out.println("\n\n");
+				c1.order();
 			}
 			if(userIn.toLowerCase().compareTo("coupon")==0) {
 				Coupon temp = c1.getCoupon();
@@ -80,6 +79,7 @@ public class Driver2 {
 				System.out.print("Enter in your coupon code");
 				userIn = in.nextLine().toLowerCase();
 				if(Coupon.checkValid(userIn)) {
+					flag =1;
 					c1.getCoupon().setName(userIn);
 					c1.setPercentOff(Coupon.getValidCodes().get(userIn));
 					System.out.println(c1.getCoupon().getName() + " successfully added to your account " + c1.getCoupon().getPercentageOff() + "% will be taken off at checkout.");
@@ -98,7 +98,7 @@ public class Driver2 {
 						}
 					}
 				}
-				if(Coupon.checkValid(userIn)) {
+				if(Coupon.checkValid(userIn) && flag !=1) {
 					c1.getCoupon().setName(userIn);
 					c1.setPercentOff(Coupon.getValidCodes().get(userIn));
 					System.out.println(c1.getCoupon().getName() + " successfully added to your account " + c1.getCoupon().getPercentageOff() + "% will be taken off at checkout.");

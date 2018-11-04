@@ -31,9 +31,14 @@ public class Restaurant {
 		this.menu.add(i);
 	}
 	public void printMenu() {
+		int count = 1;
 		System.out.println(this.name+"'s menu:");
 		for(Item i : this.menu) {
-		System.out.println(i.getName() + ":" + i.getPrice());
+		System.out.print("\t" + i.getName() + ":" + i.getPrice() + "\t");
+		if(count%4==0) {
+			System.out.println();
+		}
+		count+=1;
 		}
 		
 	}

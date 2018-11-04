@@ -65,7 +65,7 @@ public class Systems {
 	public void printItems() {
 		for(Restaurant r : restaurantList) {
 			for(Item i :r.getMenu()) {
-				System.out.println(i.getName());
+				System.out.print(i.getName());
 			}
 		}		
 	}
