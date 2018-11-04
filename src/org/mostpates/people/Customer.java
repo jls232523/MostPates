@@ -44,6 +44,7 @@ public class Customer {
 	}
 	public void addToCart(Item newItem) {
 		this.getCart().addItem(newItem);
+		System.out.println(newItem.getName() + " successfully added to cart.");
 	}
 	public ShoppingCart getCart() {
 		return cart;
@@ -54,6 +55,14 @@ public class Customer {
 	}
 	public void removeFromCart(Item newItem) {
 		this.getCart().removeItem(newItem);
+		
+	}
+	public Coupon getCoupon() {
+		return this.coupon;
+		
+	}
+	public void setPercentOff(Double double1) {
+		this.coupon.setPercentOff(double1);
 		
 	}
 }

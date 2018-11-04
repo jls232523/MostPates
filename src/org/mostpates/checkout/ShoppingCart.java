@@ -31,4 +31,11 @@ public class ShoppingCart {
 		cart.remove(i);
 		
 	}
+	public void printCart() {
+		System.out.println("Your Current Cart Has:");
+		for(Item i : this.getItems()) {
+			System.out.println(i.getName()+" for $" + i.getPrice());
+		}
+		
+	}
 }

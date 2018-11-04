@@ -1,7 +1,10 @@
 package org.mostpates.system;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.mostpates.checkout.*;
 import org.mostpates.people.*;
@@ -26,7 +29,7 @@ public class Systems {
 	}
 	public Restaurant getRestaurant(String name) {
 		for(Restaurant r : restaurantList) {
-			if (r.getName().toLowerCase().compareTo(name)==0){
+			if (r.getName().toLowerCase().compareTo(name.toLowerCase())==0){
 				return r;
 			}
 		}
@@ -65,6 +68,31 @@ public class Systems {
 				System.out.println(i.getName());
 			}
 		}		
+	}
+	public void buildSystem(String[] args) throws FileNotFoundException {
+		Scanner in = new Scanner(new File(args[0]));
+		Restaurant r;
+		Item item;
+		String line;
+		String[] fields;
+		int count =0;
+		while(in.hasNextLine()) {
+			line = in.nextLine();
+			if(count!=0) {
+			 fields = line.split(",");
+			 r = new Restaurant();
+			 r.setName(fields[0]);
+			 r.setAddress(fields[1]);
+			 this.addRestaurant(r);
+			 for(int i=2;i<fields.length;i=i+2) {
+				 item = new Item();
+				 item.setName(fields[i]);
+				 item.setPrice(Double.valueOf(fields[i+1]));
+				 r.getMenu().add(item);
+			 }
+			}
+			count+=1;
+		}
 	}
 
 }
