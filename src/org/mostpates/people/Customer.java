@@ -5,14 +5,14 @@ import org.mostpates.shops.Item;
 
 public class Customer {
 	public String name;
-	public int phone;
+	public String phone;
 	public String address;
 	public ShoppingCart cart;
 	public Coupon coupon;
 	
 	public Customer() {
 		name ="unknown";
-		phone =0;
+		phone ="0";
 		address ="unknown";
 		cart = new ShoppingCart();
 		coupon = new Coupon();
@@ -29,10 +29,10 @@ public class Customer {
 	public String getAddress() {
 		return this.address;
 	}
-	public void setPhone(int phone) {
-		this.phone  = phone;
+	public void setPhone(String userIn) {
+		this.phone  = userIn;
 	}
-	public int getPhone() {
+	public String getPhone() {
 		return this.phone;
 	}
 	public int getCode() {

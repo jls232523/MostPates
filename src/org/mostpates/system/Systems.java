@@ -26,7 +26,7 @@ public class Systems {
 	}
 	public Restaurant getRestaurant(String name) {
 		for(Restaurant r : restaurantList) {
-			if (r.getName().compareTo(name)==0){
+			if (r.getName().toLowerCase().compareTo(name)==0){
 				return r;
 			}
 		}
@@ -34,7 +34,7 @@ public class Systems {
 	}
 	public Customer getCustomer(String name) {
 		for(Customer c : customerList) {
-			if (c.getName().compareTo(name)==0){
+			if (c.getName().toLowerCase().compareTo(name)==0){
 				return c;
 			}
 		}
@@ -47,6 +47,24 @@ public class Systems {
 	public boolean isRestaurant() {
 		return false;
 		
+	}
+	public void printRestaurants() {
+		for(Restaurant r : restaurantList) {
+			System.out.println(r.getName());
+		}
+		
+	}
+	public void printCustomers() {
+		for(Customer c : customerList) {
+			System.out.println(c.getName());
+		}
+	}
+	public void printItems() {
+		for(Restaurant r : restaurantList) {
+			for(Item i :r.getMenu()) {
+				System.out.println(i.getName());
+			}
+		}		
 	}
 
 }

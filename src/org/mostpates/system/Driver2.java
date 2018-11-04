@@ -3,16 +3,16 @@ package org.mostpates.system;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
+import java.sql.*;
 import org.mostpates.checkout.Cashier;
 import org.mostpates.checkout.Coupon;
 import org.mostpates.people.Customer;
 import org.mostpates.shops.Item;
 import org.mostpates.shops.Restaurant;
 
-public class Driver {
-
+public class Driver2 {
 	public static void main(String[] args) throws FileNotFoundException {
+
 		Systems mySystem = new Systems();//make system
 		
 		Restaurant r1 = new Restaurant();
@@ -21,10 +21,7 @@ public class Driver {
 		Restaurant r4 = new Restaurant();
 		Restaurant r5 = new Restaurant();
 		Restaurant r6 = new Restaurant();
-		
-		Customer c1 = new Customer();
-		Customer c2 = new Customer();
-		Customer c3 = new Customer();
+
 		
 		Cashier ca1 = new Cashier();
 		Item i1 = new Item();
@@ -94,29 +91,37 @@ public class Driver {
 		r6.setAddress("1303 E University Blvd, Tucson AZ, 85719");
 		r6.getMenu().add(i6);
 		r6.getMenu().add(i9);
-		
-		mySystem.addCustomer(c1);
-		c1.setName("Josh");
-		c1.setAddress("1920 N 1st Ave, Tucson AZ, 85719");
-		mySystem.addCustomer(c2);
-		c2.setName("Jessica");
-		c2.setAddress("204 N Mabel Rd, Tucson AZ, 85719");
-		mySystem.addCustomer(c3);
-		c3.setName("Nadine");
-		c3.setAddress("210 N Stone Ave, Tucson AZ, 85719");
+
 		Scanner in = null;
 		String command = null;
 		String[] commandList = null;
-		in = new Scanner(new File(args[0]));
+		in = new Scanner(System.in);
+		
+		String inpt = "hello";
 		Customer c;
 		Restaurant r;
-		while(in.hasNextLine()) {
-			command = in.nextLine();
-			commandList = command.split(",");
+		System.out.println("***Welcome to MostPates***\nWho is trying to order food?\n");
+		String userIn = in.nextLine();
+		Customer c1 = new Customer();
+		c1.setName(userIn);
+		System.out.println("Where do you live?\n");
+		userIn = in.nextLine();
+		c1.setAddress(userIn);
+		System.out.println("Phone Number?\n");
+		userIn = in.nextLine();
+		c1.setPhone(userIn);
+		mySystem.addCustomer(c1);
+		System.out.println("***Restaurant List***");
+		mySystem.printRestaurants();
+		System.out.println("Which restaurant do you want to order from?");
+		userIn = in.nextLine();
+		r = mySystem.getRestaurant(userIn.toLowerCase());
+		r.printMenu();
+		while(inpt.toLowerCase().compareTo("exit")!=0) {
+			inpt = in.nextLine().toLowerCase();
 			int flag = 0;
-			if(commandList[0]!="#") {
-				switch(commandList[0]){
-					case "AddItem":
+				switch(inpt){
+					case "additem":
 						System.out.println("AddItem");
 						flag = 0;
 						c = mySystem.getCustomer(commandList[1]);
@@ -132,18 +137,18 @@ public class Driver {
 						System.out.println("No "+commandList[2]+" found in " + r.getName()+ "'s menu");
 						}
 						break;
-					case "Total":
+					case "total":
 						System.out.println("Total");
 						c = mySystem.getCustomer(commandList[1]);
 						System.out.println(c.getName()+ "'s total is "+c.getCart().getTotal());
 						break;
-					case "Order":
+					case "order":
 						System.out.println("Order");
 						//String dir = "https://maps.googleapis.com/maps/api/directions/json?origin="+"userAdd"+"&destination="+"storeADd"+"&key=";
 						c = mySystem.getCustomer(commandList[1]);
 						c.order();
 						break;
-					case "RemoveItem":
+					case "removeitem":
 						System.out.println("RemoveItem");
 						flag = 0;
 						c = mySystem.getCustomer(commandList[1]);
@@ -159,7 +164,7 @@ public class Driver {
 						System.out.println("No "+commandList[2]+" found in " + r.getName()+ "'s cart");
 						}
 						break;
-					case "Status":
+					case "status":
 						System.out.println("Status");
 						c = mySystem.getCustomer(commandList[1]);
 						System.out.print(c.getName() + "'s Items: ");
@@ -168,7 +173,7 @@ public class Driver {
 						}
 						System.out.println();
 						break;
-					case "Coupon":
+					case "coupon":
 						System.out.println("Coupon");
 						Coupon.checkValid(commandList[2]);
 						break;
@@ -176,16 +181,8 @@ public class Driver {
 				}
 			}
 		}
-		System.out.println("***Restaurant List***");
-		mySystem.printRestaurants();
-		System.out.println("***Customer List/***");
-		mySystem.printCustomers();
-		System.out.println("***Item List***");
-		mySystem.printItems();
-		in.close();
-		
-		
-
 	}
 
-}
+			
+		
+

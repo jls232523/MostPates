@@ -30,4 +30,11 @@ public class Restaurant {
 	public void setMenu(Item i) {
 		this.menu.add(i);
 	}
+	public void printMenu() {
+		System.out.println(this.name+"'s menu:");
+		for(Item i : this.menu) {
+		System.out.println(i.getName() + ":" + i.getPrice());
+		}
+		
+	}
 }
