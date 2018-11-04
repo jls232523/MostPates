@@ -119,8 +119,8 @@ public class Driver {
 					case "AddItem":
 						System.out.println("AddItem");
 						flag = 0;
-						c = mySystem.getCustomer(commandList[1]);
-						r = mySystem.getRestaurant(commandList[3]);
+						c = mySystem.getCustomer(commandList[1].toLowerCase());
+						r = mySystem.getRestaurant(commandList[3].toLowerCase());
 						for(Item i : r.getMenu()) {
 							if(commandList[2].compareTo(i.getName())==0) {
 								c.addToCart(i);
@@ -134,22 +134,22 @@ public class Driver {
 						break;
 					case "Total":
 						System.out.println("Total");
-						c = mySystem.getCustomer(commandList[1]);
+						c = mySystem.getCustomer(commandList[1].toLowerCase());
 						System.out.println(c.getName()+ "'s total is "+c.getCart().getTotal());
 						break;
 					case "Order":
 						System.out.println("Order");
 						//String dir = "https://maps.googleapis.com/maps/api/directions/json?origin="+"userAdd"+"&destination="+"storeADd"+"&key=";
-						c = mySystem.getCustomer(commandList[1]);
+						c = mySystem.getCustomer(commandList[1].toLowerCase());
 						c.order();
 						break;
 					case "RemoveItem":
 						System.out.println("RemoveItem");
 						flag = 0;
-						c = mySystem.getCustomer(commandList[1]);
-						r = mySystem.getRestaurant(commandList[3]);
+						c = mySystem.getCustomer(commandList[1].toLowerCase());
+						r = mySystem.getRestaurant(commandList[3].toLowerCase());
 						for(Item i : r.getMenu()) {
-							if(commandList[2].compareTo(i.getName())==0) {
+							if(commandList[2].toLowerCase().compareTo(i.getName().toLowerCase())==0) {
 								c.removeFromCart(i);
 								flag = 1;
 							}
@@ -161,7 +161,7 @@ public class Driver {
 						break;
 					case "Status":
 						System.out.println("Status");
-						c = mySystem.getCustomer(commandList[1]);
+						c = mySystem.getCustomer(commandList[1].toLowerCase());
 						System.out.print(c.getName() + "'s Items: ");
 						for(Item i : c.getCart().getItems()) {
 							System.out.print(i.getName() + " ");

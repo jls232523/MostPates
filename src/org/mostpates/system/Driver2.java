@@ -14,8 +14,8 @@ public class Driver2 {
 	public static void main(String[] args) throws FileNotFoundException {
 
 		Systems mySystem = new Systems();//make system
-		
-		Restaurant r1 = new Restaurant();
+		//mySystem.buildSystem();
+		/*Restaurant r1 = new Restaurant();
 		Restaurant r2 = new Restaurant();
 		Restaurant r3 = new Restaurant();
 		Restaurant r4 = new Restaurant();
@@ -90,7 +90,7 @@ public class Driver2 {
 		r6.setName("GactusCrille");
 		r6.setAddress("1303 E University Blvd, Tucson AZ, 85719");
 		r6.getMenu().add(i6);
-		r6.getMenu().add(i9);
+		r6.getMenu().add(i9);*/
 
 		Scanner in = null;
 		String command = null;
