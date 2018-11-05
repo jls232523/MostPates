@@ -28,13 +28,13 @@ public class Driver2 {
 		System.out.println("***Welcome to MostPates***\nWho is trying to order food?(n for new user or any key for returning)\n");
 		userIn = in.nextLine();
 		if(userIn.toLowerCase().compareTo("n")==0) {
-			Driver2.makeNewCustomer(userIn, userFile, c1, in, mySystem);
+			Driver2.makeNewCustomer(userIn, userFile, c1, in, mySystem); //makes new customer 
 		}
 		else {
 			System.out.println("What is your name?\n");
 			userIn = in.nextLine();
 			userCheck = Driver2.checkExistingCustomer(userIn, c1, userCheck);
-			if(userCheck==0) {
+			if(userCheck==0) { //loop to keep asking for username
 			System.out.println("Seems like there is not an account with that name enter another or press n to create an account");
 			userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");
 			userCheck = Driver2.checkExistingCustomer(userIn, c1, userCheck);
@@ -45,14 +45,14 @@ public class Driver2 {
 			}
 			}
 			if(userCheck==0) {
-				Driver2.makeNewCustomer(userIn, userFile, c1, in, mySystem);
+				Driver2.makeNewCustomer(userIn, userFile, c1, in, mySystem); //make new customer in system
 			}
 		}
 		
 		userFile.close();
 		r = Driver2.back(mySystem, userIn, r, in);
 		Item i = null;
-		while(userIn.toLowerCase().replaceAll("\\s+","").compareTo("exit")!=0) {
+		while(userIn.toLowerCase().replaceAll("\\s+","").compareTo("exit")!=0) { //main loop to keep function going
 			if(check==0 && r!=null) {
 			r.printMenu();
 			flag = 0;
@@ -60,40 +60,40 @@ public class Driver2 {
 			userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");;
 			}
 			if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("exit")==0) {
-				
+				//customer is done with app
 				break;
 			}
-			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("add")==0) {
+			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("add")==0) { //customer wants to add an item 
 				Driver2.addItem(i, r, userIn, flag, c1, in);
 				check = 0;
 			}
-			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("cart")==0) {
+			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("cart")==0) { // customer wants to see their cart
 				c1.getCart().printCart();
 				System.out.println("Current Total is $"+c1.getCart().getTotal(c1.getCoupon()));
 				System.out.println("Your Savings: " + c1.getCart().getSavings(c1.getCoupon()));
 				System.out.println("\n\n");
 				check = 0;
 			}
-			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("remove")==0) {
+			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("remove")==0) { //customer wants to remove an item
 				Driver2.remove(c1, userIn, i, r, in, flag);
 				check = 0;
 			}
-			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("order")==0) {
+			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("order")==0) {//customer wants to place an order
 				c1.order();
 				check = 0;
 				break;
 			}
-			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("coupon")==0) {
+			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("coupon")==0) {// customer wants to use a coupon code
 				Driver2.coupon(c1, userIn, in, flag);	
 				check = 0;
 			}
-			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0) {
+			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0) {//customer wants to go back to restaurant list
 				r = Driver2.back(mySystem, userIn, r, in);
 				check = 0;
 			}
 			else {
 				while(!(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("coupon")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("order")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("remove")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("cart")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("add")==0)) {
-				if(userIn.toLowerCase().compareTo("exit")==0) {
+				if(userIn.toLowerCase().compareTo("exit")==0) {//bad command ask for it again
 					break;
 				}
 				System.out.println("\nWhich would you like to do?(add to choose an item, cart to see cart,order to place order,coupon to enter coupon code,back to go back to restaurants,remove to remove an item or exit to cancel order and exit");
@@ -105,7 +105,7 @@ public class Driver2 {
 		}
 	}
 
-	private static int checkExistingCustomer(String userIn,Customer c1,int userCheck) throws FileNotFoundException {
+	private static int checkExistingCustomer(String userIn,Customer c1,int userCheck) throws FileNotFoundException {//checks if the customer already exists in the system
 		Scanner userScanner = new Scanner(new File("/Users/Joshua/Documents/CSC210/MostPates/src/OutputFiles/users.txt"));
 		while(userScanner.hasNextLine()) {
 			String userLine = userScanner.nextLine();
@@ -122,7 +122,7 @@ public class Driver2 {
 		return userCheck;
 	}
 
-	private static void makeNewCustomer(String userIn,PrintWriter userFile,Customer c1,Scanner in,Systems mySystem) {
+	private static void makeNewCustomer(String userIn,PrintWriter userFile,Customer c1,Scanner in,Systems mySystem) {//makes new customer for system through userIn
 		System.out.println("What is your name?\n");
 		userIn = in.nextLine();
 		c1.setName(userIn);
@@ -139,7 +139,7 @@ public class Driver2 {
 		
 	}
 
-	private static Restaurant back(Systems mySystem, String userIn, Restaurant r, Scanner in) {
+	private static Restaurant back(Systems mySystem, String userIn, Restaurant r, Scanner in) {//goes back to restaurant screen
 		System.out.println("***Restaurant List***");
 		mySystem.printRestaurants();
 		System.out.println("Which restaurant do you want to order from?");
@@ -156,7 +156,7 @@ public class Driver2 {
 		return r;
 	}
 
-	private static void coupon(Customer c1, String userIn, Scanner in, int flag) {
+	private static void coupon(Customer c1, String userIn, Scanner in, int flag) {//determines if coupon code is valid
 		Coupon temp = c1.getCoupon();
 		if(temp.getName().compareTo("unknown")==0) {
 		System.out.print("Enter in your coupon code");
@@ -193,7 +193,7 @@ public class Driver2 {
 		
 	}
 
-	private static void remove(Customer c1, String userIn, Item i,Restaurant r,Scanner in, int flag) {
+	private static void remove(Customer c1, String userIn, Item i,Restaurant r,Scanner in, int flag) {//removes item from cart
 		c1.getCart().printCart();
 		if(c1.getCart().getItems().size()==0) {
 			System.out.println("No items in cart cannot remove");
@@ -224,7 +224,7 @@ public class Driver2 {
 		
 	}
 
-	private static void addItem(Item i,Restaurant r, String userIn,int flag,Customer c1,Scanner in) {
+	private static void addItem(Item i,Restaurant r, String userIn,int flag,Customer c1,Scanner in) {//add items to a cart
 		System.out.println("Which item do you want to add? (or back to back)");
 		userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");
 		if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0) {
