@@ -10,9 +10,11 @@ import org.mostpates.shops.Item;
 public class ShoppingCart {
 	List<Item> cart;
 	HashMap<Item, Double> price;
+	String currentRestaurant;
 	public ShoppingCart() {
 		cart = new ArrayList<Item>();
 		price = new HashMap<Item,Double>();
+		currentRestaurant = "unknown";
 	}
 	public void addItem(Item i) {
 		cart.add(i);
