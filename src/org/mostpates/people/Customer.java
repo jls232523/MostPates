@@ -35,13 +35,7 @@ public class Customer {
 	public String getPhone() {
 		return this.phone;
 	}
-	public int getCode() {
-		return 0;
-		//TODO FIXME
-	}
-	public void setCode(int code) {
-		//TODO FIXME
-	}
+
 	public void addToCart(Item newItem) {
 		this.getCart().addItem(newItem);
 		System.out.println(newItem.getName() + " successfully added to cart.");

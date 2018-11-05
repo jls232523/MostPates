@@ -1,7 +1,11 @@
 package org.mostpates.system;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import java.sql.*;
 import org.mostpates.checkout.Cashier;
@@ -11,44 +15,59 @@ import org.mostpates.shops.Item;
 import org.mostpates.shops.Restaurant;
 
 public class Driver2 {
-	public static void main(String[] args) throws FileNotFoundException {
-
+	public static void main(String[] args) throws IOException {
 		Systems mySystem = new Systems();//make system
 		mySystem.buildSystem(args);
-
 		Scanner in = null;
 		String command = null;
 		String[] commandList = null;
 		in = new Scanner(System.in);
-		
+		PrintWriter userFile = new PrintWriter(new BufferedWriter(new FileWriter("/Users/Joshua/Documents/CSC210/MostPates/src/OutputFiles/users.txt", true)));
+	    
 		String userIn = "hello";
 		Customer c;
 		Restaurant r = null;
-		System.out.println("***Welcome to MostPates***\nWho is trying to order food?\n");
-		userIn = in.nextLine();
 		Customer c1 = new Customer();
 		int flag = 0;
 		int check = 0;
-		c1.setName(userIn);
-		System.out.println("Where do you live?\n");
+		int userCheck = 0;
+		System.out.println("***Welcome to MostPates***\nWho is trying to order food?(n for new user or any key for returning)\n");
 		userIn = in.nextLine();
-		c1.setAddress(userIn);
-		System.out.println("Phone Number?\n");
-		userIn = in.nextLine();
-		c1.setPhone(userIn);
-		mySystem.addCustomer(c1);
-		//System.out.println("***Restaurant List***");
-		//mySystem.printRestaurants();
+		if(userIn.toLowerCase().compareTo("n")==0) {
+			Driver2.makeNewCustomer(userIn, userFile, c1, in, mySystem);
+		}
+		else {
+			System.out.println("What is your name?\n");
+			userIn = in.nextLine();
+			Scanner userScanner = new Scanner(new File("/Users/Joshua/Documents/CSC210/MostPates/src/OutputFiles/users.txt"));
+			while(userScanner.hasNextLine()) {
+				String userLine = userScanner.nextLine();
+				String[] userLineList = userLine.split(",");
+				if(userLineList[0].toLowerCase().compareTo(userIn.toLowerCase())==0) {
+					c1.setName(userLineList[0]);
+					c1.setAddress(userLineList[1]);
+					c1.setPhone(userLineList[2]);
+					System.out.println("Welcome Back "+ c1.getName());
+					userCheck = 1;
+				}
+			}
+			if(userCheck == 0) {
+			System.out.println("Seems like you don't have an account. Let's make one.");
+			Driver2.makeNewCustomer(userIn, userFile, c1, in, mySystem);
+			}
+		}
+		userFile.close();
 		r = Driver2.back(mySystem, userIn, r, in);
 		Item i = null;
 		while(userIn.toLowerCase().compareTo("exit")!=0) {
-			if(check==0) {
+			if(check==0 && r!=null) {
 			r.printMenu();
 			flag = 0;
 			System.out.println("\nWhich would you like to do?(add to choose an item, cart to see cart,order to place order,coupon to enter coupon code,back to go back to restaurants,remove to remove an item or exit to cancel order and exit");
 			userIn = in.nextLine().toLowerCase();
 			}
 			if(userIn.toLowerCase().compareTo("exit")==0) {
+				
 				break;
 			}
 			else if(userIn.toLowerCase().compareTo("add")==0) {
@@ -80,6 +99,9 @@ public class Driver2 {
 			}
 			else {
 				while(!(userIn.toLowerCase().compareTo("back")==0||userIn.toLowerCase().compareTo("coupon")==0||userIn.toLowerCase().compareTo("order")==0||userIn.toLowerCase().compareTo("remove")==0||userIn.toLowerCase().compareTo("cart")==0||userIn.toLowerCase().compareTo("add")==0)) {
+				if(userIn.toLowerCase().compareTo("exit")==0) {
+					break;
+				}
 				System.out.println("\nWhich would you like to do?(add to choose an item, cart to see cart,order to place order,coupon to enter coupon code,back to go back to restaurants,remove to remove an item or exit to cancel order and exit");
 				userIn = in.nextLine().toLowerCase();
 				check = 1;
@@ -87,6 +109,23 @@ public class Driver2 {
 			}
 			flag = 0;
 		}
+	}
+
+	private static void makeNewCustomer(String userIn,PrintWriter userFile,Customer c1,Scanner in,Systems mySystem) {
+		System.out.println("What is your name?\n");
+		userIn = in.nextLine();
+		c1.setName(userIn);
+		userFile.print(userIn + ",");
+		System.out.println("Where do you live?\n");
+		userIn = in.nextLine();
+		c1.setAddress(userIn);
+		userFile.print(userIn + ",");
+		System.out.println("Phone Number?\n");
+		userIn = in.nextLine();
+		c1.setPhone(userIn);
+		userFile.print(userIn+"\n");
+		mySystem.addCustomer(c1);
+		
 	}
 
 	private static Restaurant back(Systems mySystem, String userIn, Restaurant r, Scanner in) {
@@ -97,7 +136,7 @@ public class Driver2 {
 		r = mySystem.getRestaurant(userIn.toLowerCase());
 		while(r==null) {
 			if(userIn.toLowerCase().compareTo("exit")==0) {
-				break;
+				System.exit(1);
 			}
 			System.out.println("Not a valid choice please pick again");
 			userIn = in.nextLine().toLowerCase();
