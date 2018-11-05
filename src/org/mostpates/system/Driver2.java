@@ -2,13 +2,10 @@ package org.mostpates.system;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
-import java.sql.*;
-import org.mostpates.checkout.Cashier;
 import org.mostpates.checkout.Coupon;
 import org.mostpates.people.Customer;
 import org.mostpates.shops.Item;
@@ -19,13 +16,9 @@ public class Driver2 {
 		Systems mySystem = new Systems();//make system
 		mySystem.buildSystem(args);
 		Scanner in = null;
-		String command = null;
-		String[] commandList = null;
 		in = new Scanner(System.in);
 		PrintWriter userFile = new PrintWriter(new BufferedWriter(new FileWriter("/Users/Joshua/Documents/CSC210/MostPates/src/OutputFiles/users.txt", true)));
-	    
 		String userIn = "hello";
-		Customer c;
 		Restaurant r = null;
 		Customer c1 = new Customer();
 		int flag = 0;
@@ -55,7 +48,9 @@ public class Driver2 {
 			System.out.println("Seems like you don't have an account. Let's make one.");
 			Driver2.makeNewCustomer(userIn, userFile, c1, in, mySystem);
 			}
+			userScanner.close();
 		}
+		
 		userFile.close();
 		r = Driver2.back(mySystem, userIn, r, in);
 		Item i = null;
