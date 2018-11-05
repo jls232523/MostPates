@@ -71,7 +71,7 @@ public class Driver2 {
 			}
 			else if(userIn.toLowerCase().compareTo("cart")==0) {
 				c1.getCart().printCart();
-				System.out.println("Current Total is $"+c1.getCart().getTotal());
+				System.out.println("Current Total is $"+c1.getCart().getTotal(c1.getCoupon()));
 				System.out.println("\n\n");
 				check = 0;
 			}

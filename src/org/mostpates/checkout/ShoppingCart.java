@@ -22,12 +22,13 @@ public class ShoppingCart {
 	public List<Item> getItems() {
 		return this.cart;
 	}
-	public String getTotal() {
+	public String getTotal(Coupon c) {
 		double total= 0.0;
 		for(Item i : this.getItems()) {
 			total = total + i.getPrice();
 		}
-		return Double.toString(total);
+		total = total - (total * (c.percentOff/100.0));
+		return Double.toString(total) ;
 	}
 	public void removeItem(Item i) {
 		cart.remove(i);

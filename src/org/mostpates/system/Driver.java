@@ -135,7 +135,7 @@ public class Driver {
 					case "Total":
 						System.out.println("Total");
 						c = mySystem.getCustomer(commandList[1].toLowerCase());
-						System.out.println(c.getName()+ "'s total is "+c.getCart().getTotal());
+						System.out.println(c.getName()+ "'s total is "+c.getCart().getTotal(c.getCoupon()));
 						break;
 					case "Order":
 						System.out.println("Order");
