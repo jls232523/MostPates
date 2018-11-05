@@ -41,4 +41,15 @@ public class ShoppingCart {
 		}
 		
 	}
+	public String getSavings(Coupon c) {
+		double total= 0.0;
+		double totalWCoupon = 0.0;
+		for(Item i : this.getItems()) {
+			total = total + i.getPrice();
+		}
+		totalWCoupon = total - (total * (c.percentOff/100.0));
+		total = total - totalWCoupon;
+		return Double.toString(total) ;
+		
+	}
 }

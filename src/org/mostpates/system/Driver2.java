@@ -2,6 +2,7 @@ package org.mostpates.system;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,68 +33,66 @@ public class Driver2 {
 		else {
 			System.out.println("What is your name?\n");
 			userIn = in.nextLine();
-			Scanner userScanner = new Scanner(new File("/Users/Joshua/Documents/CSC210/MostPates/src/OutputFiles/users.txt"));
-			while(userScanner.hasNextLine()) {
-				String userLine = userScanner.nextLine();
-				String[] userLineList = userLine.split(",");
-				if(userLineList[0].toLowerCase().compareTo(userIn.toLowerCase())==0) {
-					c1.setName(userLineList[0]);
-					c1.setAddress(userLineList[1]);
-					c1.setPhone(userLineList[2]);
-					System.out.println("Welcome Back "+ c1.getName());
-					userCheck = 1;
-				}
+			userCheck = Driver2.checkExistingCustomer(userIn, c1, userCheck);
+			if(userCheck==0) {
+			System.out.println("Seems like there is not an account with that name enter another or press n to create an account");
+			userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");
+			userCheck = Driver2.checkExistingCustomer(userIn, c1, userCheck);
+			while(userIn.compareTo("n")!=0 && userCheck == 0) {
+			System.out.println("Seems like there is not an account with that name enter another or press n to create an account");
+			userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");
+			userCheck = Driver2.checkExistingCustomer(userIn, c1, userCheck);
 			}
-			if(userCheck == 0) {
-			System.out.println("Seems like you don't have an account. Let's make one.");
-			Driver2.makeNewCustomer(userIn, userFile, c1, in, mySystem);
 			}
-			userScanner.close();
+			if(userCheck==0) {
+				Driver2.makeNewCustomer(userIn, userFile, c1, in, mySystem);
+			}
 		}
 		
 		userFile.close();
 		r = Driver2.back(mySystem, userIn, r, in);
 		Item i = null;
-		while(userIn.toLowerCase().compareTo("exit")!=0) {
+		while(userIn.toLowerCase().replaceAll("\\s+","").compareTo("exit")!=0) {
 			if(check==0 && r!=null) {
 			r.printMenu();
 			flag = 0;
 			System.out.println("\nWhich would you like to do?(add to choose an item, cart to see cart,order to place order,coupon to enter coupon code,back to go back to restaurants,remove to remove an item or exit to cancel order and exit");
-			userIn = in.nextLine().toLowerCase();
+			userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");;
 			}
-			if(userIn.toLowerCase().compareTo("exit")==0) {
+			if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("exit")==0) {
 				
 				break;
 			}
-			else if(userIn.toLowerCase().compareTo("add")==0) {
+			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("add")==0) {
 				Driver2.addItem(i, r, userIn, flag, c1, in);
 				check = 0;
 			}
-			else if(userIn.toLowerCase().compareTo("cart")==0) {
+			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("cart")==0) {
 				c1.getCart().printCart();
 				System.out.println("Current Total is $"+c1.getCart().getTotal(c1.getCoupon()));
+				System.out.println("Your Savings: " + c1.getCart().getSavings(c1.getCoupon()));
 				System.out.println("\n\n");
 				check = 0;
 			}
-			else if(userIn.toLowerCase().compareTo("remove")==0) {
+			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("remove")==0) {
 				Driver2.remove(c1, userIn, i, r, in, flag);
 				check = 0;
 			}
-			else if(userIn.toLowerCase().compareTo("order")==0) {
+			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("order")==0) {
 				c1.order();
 				check = 0;
 				break;
 			}
-			else if(userIn.toLowerCase().compareTo("coupon")==0) {
+			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("coupon")==0) {
 				Driver2.coupon(c1, userIn, in, flag);	
 				check = 0;
 			}
-			else if(userIn.toLowerCase().compareTo("back")==0) {
+			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0) {
 				r = Driver2.back(mySystem, userIn, r, in);
 				check = 0;
 			}
 			else {
-				while(!(userIn.toLowerCase().compareTo("back")==0||userIn.toLowerCase().compareTo("coupon")==0||userIn.toLowerCase().compareTo("order")==0||userIn.toLowerCase().compareTo("remove")==0||userIn.toLowerCase().compareTo("cart")==0||userIn.toLowerCase().compareTo("add")==0)) {
+				while(!(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("coupon")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("order")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("remove")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("cart")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("add")==0)) {
 				if(userIn.toLowerCase().compareTo("exit")==0) {
 					break;
 				}
@@ -104,6 +103,23 @@ public class Driver2 {
 			}
 			flag = 0;
 		}
+	}
+
+	private static int checkExistingCustomer(String userIn,Customer c1,int userCheck) throws FileNotFoundException {
+		Scanner userScanner = new Scanner(new File("/Users/Joshua/Documents/CSC210/MostPates/src/OutputFiles/users.txt"));
+		while(userScanner.hasNextLine()) {
+			String userLine = userScanner.nextLine();
+			String[] userLineList = userLine.split(",");
+			if(userLineList[0].toLowerCase().replaceAll("\\s+","").compareTo(userIn.toLowerCase())==0) {
+				c1.setName(userLineList[0]);
+				c1.setAddress(userLineList[1]);
+				c1.setPhone(userLineList[2]);
+				System.out.println("Welcome Back "+ c1.getName());
+				userCheck = 1;
+			}
+		}
+		userScanner.close();
+		return userCheck;
 	}
 
 	private static void makeNewCustomer(String userIn,PrintWriter userFile,Customer c1,Scanner in,Systems mySystem) {
@@ -210,15 +226,15 @@ public class Driver2 {
 
 	private static void addItem(Item i,Restaurant r, String userIn,int flag,Customer c1,Scanner in) {
 		System.out.println("Which item do you want to add? (or back to back)");
-		userIn = in.nextLine().toLowerCase();
-		if(userIn.toLowerCase().compareTo("back")==0) {
+		userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");
+		if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0) {
 			flag = 1;	
 		}
 		i = r.getItem(userIn);
 		while(i==null) {
 			System.out.println("Not a valid choice please pick again (or back to back)");
-			userIn = in.nextLine().toLowerCase();
-			if(userIn.toLowerCase().compareTo("back")==0) {
+			userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");
+			if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0) {
 				flag = 1;
 				break;
 			}
