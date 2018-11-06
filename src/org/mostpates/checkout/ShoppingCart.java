@@ -52,4 +52,8 @@ public class ShoppingCart {
 		return Double.toString(total) ;
 		
 	}
+	public void eraseCart() {
+		this.getItems().clear();
+		
+	}
 }

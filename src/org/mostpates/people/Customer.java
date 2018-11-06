@@ -9,13 +9,14 @@ public class Customer {
 	public String address;
 	public ShoppingCart cart;
 	public Coupon coupon;
-	
+	public Confirmation confirm;
 	public Customer() {
 		name ="unknown";
 		phone ="0";
 		address ="unknown";
 		cart = new ShoppingCart();
 		coupon = new Coupon();
+		confirm = new Confirmation();
 	}
 	public void setName(String name) {
 		this.name  = name;
@@ -44,8 +45,10 @@ public class Customer {
 		return cart;
 	}
 	public void order() {
-		// TODO FIXME
-		System.out.println("***ORDER PLACED***");
+		System.out.print("***ORDER PLACED***");
+		this.confirm.setOrderTime();
+		System.out.println("\nPlaced at " + this.confirm.getOrderTime());
+		System.out.println("Estimated time of arrival is " + this.confirm.getEstimatedTime());
 		
 	}
 	public void removeFromCart(Item newItem) {

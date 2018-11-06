@@ -32,7 +32,7 @@ public class Driver2 {
 		}
 		else {
 			System.out.println("What is your name?\n");
-			userIn = in.nextLine();
+			userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");
 			userCheck = Driver2.checkExistingCustomer(userIn, c1, userCheck);
 			if(userCheck==0) { //loop to keep asking for username
 			System.out.println("Seems like there is not an account with that name enter another or press n to create an account");
@@ -50,7 +50,7 @@ public class Driver2 {
 		}
 		
 		userFile.close();
-		r = Driver2.back(mySystem, userIn, r, in);
+		r = Driver2.back(mySystem, userIn, r, in,c1);
 		Item i = null;
 		while(userIn.toLowerCase().replaceAll("\\s+","").compareTo("exit")!=0) { //main loop to keep function going
 			if(check==0 && r!=null) {
@@ -88,7 +88,7 @@ public class Driver2 {
 				check = 0;
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0) {//customer wants to go back to restaurant list
-				r = Driver2.back(mySystem, userIn, r, in);
+				r = Driver2.back(mySystem, userIn, r, in,c1);
 				check = 0;
 			}
 			else {
@@ -139,12 +139,16 @@ public class Driver2 {
 		
 	}
 
-	private static Restaurant back(Systems mySystem, String userIn, Restaurant r, Scanner in) {//goes back to restaurant screen
+	private static Restaurant back(Systems mySystem, String userIn, Restaurant r, Scanner in, Customer c1) {//goes back to restaurant screen
 		System.out.println("***Restaurant List***");
 		mySystem.printRestaurants();
 		System.out.println("Which restaurant do you want to order from?");
 		userIn = in.nextLine();
 		r = mySystem.getRestaurant(userIn.toLowerCase());
+		if(!(Driver2.checkCart(c1,r)) && r!=null ) {
+			System.out.println("WARNING: Cart has been erased");
+			c1.getCart().eraseCart();
+		}
 		while(r==null) {
 			if(userIn.toLowerCase().compareTo("exit")==0) {
 				System.exit(1);
@@ -152,8 +156,22 @@ public class Driver2 {
 			System.out.println("Not a valid choice please pick again");
 			userIn = in.nextLine().toLowerCase();
 			r = mySystem.getRestaurant(userIn.toLowerCase());
+			if(!(Driver2.checkCart(c1,r)) && r!=null ) {
+				System.out.println("WARNING: Cart has been erased");
+				c1.getCart().eraseCart();
+			}
 		}
 		return r;
+	}
+
+	private static boolean checkCart(Customer c1, Restaurant r) {
+		
+		for(Item i : c1.getCart().getItems()) {
+			if(!(r.getMenu().contains(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private static void coupon(Customer c1, String userIn, Scanner in, int flag) {//determines if coupon code is valid

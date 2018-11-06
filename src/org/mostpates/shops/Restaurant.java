@@ -44,7 +44,7 @@ public class Restaurant {
 	}
 	public Item getItem(String inpt) {
 		for(Item i : this.getMenu()) {
-			if(inpt.toLowerCase().compareTo(i.getName().toLowerCase())==0) {
+			if(inpt.toLowerCase().compareTo(i.getName().toLowerCase().replaceAll("\\s+",""))==0) {
 				return i;
 			}
 		}
