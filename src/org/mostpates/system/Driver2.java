@@ -19,10 +19,12 @@ import org.mostpates.shops.Restaurant;
 public class Driver2 {
 	public static void main(String[] args) throws IOException {
 		Systems mySystem = new Systems();//make system
-		mySystem.buildSystem(args);
+		mySystem.buildSystem();
 		Scanner in = null;
 		in = new Scanner(System.in);
-		PrintWriter userFile = new PrintWriter(new BufferedWriter(new FileWriter("/Users/Joshua/Documents/CSC210/MostPates/src/OutputFiles/users.txt", true)));
+		File currentDir = new File("");
+		String path = currentDir.getAbsolutePath() + "/src/OutputFiles/users.txt";
+		PrintWriter userFile = new PrintWriter(new BufferedWriter(new FileWriter(path,true)));
 		String userIn = "hello";
 		Restaurant r = null;
 		Customer c1 = new Customer();
@@ -83,9 +85,14 @@ public class Driver2 {
 				check = 0;
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("order")==0) {//customer wants to place an order
+				if(c1.getCart().getItems().size()!=0) {
 				c1.order(r);
 				check = 0;
 				break;
+				}
+				else {
+					System.out.println("No Items in Cart cannot complete order.");
+				}
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("coupon")==0) {// customer wants to use a coupon code
 				Driver2.coupon(c1, userIn, in, flag);	
@@ -110,7 +117,8 @@ public class Driver2 {
 	}
 
 	private static int checkExistingCustomer(String userIn,Customer c1,int userCheck) throws FileNotFoundException {//checks if the customer already exists in the system
-		Scanner userScanner = new Scanner(new File("/Users/Joshua/Documents/CSC210/MostPates/src/OutputFiles/users.txt"));
+		File currentDir = new File("");
+		Scanner userScanner = new Scanner(new File(currentDir.getAbsolutePath() + "/src/OutputFiles/users.txt"));
 		while(userScanner.hasNextLine()) {
 			String userLine = userScanner.nextLine();
 			String[] userLineList = userLine.split(",");
@@ -149,7 +157,7 @@ public class Driver2 {
 		System.out.println("Which restaurant do you want to order from?");
 		userIn = in.nextLine();
 		r = mySystem.getRestaurant(userIn.toLowerCase());
-		if(!(Driver2.checkCart(c1,r)) && r!=null ) {
+		if( r!=null&&!(Driver2.checkCart(c1,r)) ) {
 			System.out.println("WARNING: Cart has been erased");
 			c1.getCart().eraseCart();
 		}
@@ -160,7 +168,7 @@ public class Driver2 {
 			System.out.println("Not a valid choice please pick again");
 			userIn = in.nextLine().toLowerCase();
 			r = mySystem.getRestaurant(userIn.toLowerCase());
-			if(!(Driver2.checkCart(c1,r)) && r!=null ) {
+			if(r!=null &&!(Driver2.checkCart(c1,r))) {
 				System.out.println("WARNING: Cart has been erased");
 				c1.getCart().eraseCart();
 			}

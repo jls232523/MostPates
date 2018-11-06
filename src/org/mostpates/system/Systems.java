@@ -69,8 +69,10 @@ public class Systems {
 			}
 		}		
 	}
-	public void buildSystem(String[] args) throws FileNotFoundException {
-		Scanner in = new Scanner(new File(args[0]));
+	public void buildSystem() throws FileNotFoundException {
+		File currentDir = new File("");
+		String path = (currentDir.getAbsolutePath() + "/src/InputFiles/RestaurantItemList");
+		Scanner in = new Scanner(new File(path));
 		Restaurant r;
 		Item item;
 		String line;
