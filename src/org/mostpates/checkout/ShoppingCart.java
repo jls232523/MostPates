@@ -56,4 +56,7 @@ public class ShoppingCart {
 		this.getItems().clear();
 		
 	}
+	public double calcDelivFee(double distance) {
+		return distance * .50;
+	}
 }

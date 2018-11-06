@@ -56,14 +56,20 @@ public class Customer {
 		System.out.print("***ORDER PLACED***");
 		try {
 		String str = new String();
+		String str2 = new String();
 		URL direct = new URL("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+r.getAddress().replaceAll(" ", "")+"&destinations="+this.getAddress().replaceAll(" ", "")+"&key=AIzaSyBl49PQg0nL_4KAEjWXMB1hFT0xqjdTjco");
 		URLConnection direcConnect = direct.openConnection();
 		BufferedReader in2 = new BufferedReader(new InputStreamReader(direcConnect.getInputStream()));
 		String inputLine;
 		direcConnect.connect();
+		int check = 0;
 		while ((inputLine = in2.readLine()) != null) {
 			if(inputLine.contains("mins")) {
 			str+=inputLine;
+			}
+			if(inputLine.contains("distance")||check==1) {
+				str2+=inputLine;
+				check+=1;
 			}
 		}
 			in2.close();
@@ -71,11 +77,21 @@ public class Customer {
 			String s1 = s[1].split(" ")[1];
 			s1 = s1.replaceAll("\"", "");
 			double num = Double.valueOf(s1);
+			s = str2.split(":");
+			s1 = s[2].split(" ")[1];
+			s1 = s1.replaceAll("\"", "");
+			double distance = Double.valueOf(s1);
 			this.confirm.setOrderTime();
 			this.confirm.getEstimatedTime(num);
 			System.out.println("\nPlaced at " + this.confirm.getOrderTime());
 			System.out.println("Estimated time of arrival is " + this.confirm.getEstimatedTime());	
-			
+			this.getCart().printCart();
+			System.out.println("Sub-Total is $"+this.getCart().getTotal(this.getCoupon()));
+			distance = this.getCart().calcDelivFee(distance) + 2.99;
+			System.out.println("Delivery Fee is $2.99 + $0.50 per Mile ("+s1+" miles) $"+distance);
+			System.out.println("Total : " + (distance + Double.valueOf(this.getCart().getTotal(this.getCoupon()))));
+			System.out.println("Your Savings: " + this.getCart().getSavings(this.getCoupon()));
+			System.out.println("\n\n");
 		}
 		catch (Exception x){
 		this.confirm.setOrderTime();

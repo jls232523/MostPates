@@ -91,7 +91,7 @@ public class Driver2 {
 				break;
 				}
 				else {
-					System.out.println("No Items in Cart cannot complete order.");
+					System.out.println("***No Items in Cart cannot complete order.***");
 				}
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("coupon")==0) {// customer wants to use a coupon code
@@ -165,7 +165,7 @@ public class Driver2 {
 			if(userIn.toLowerCase().compareTo("exit")==0) {
 				System.exit(1);
 			}
-			System.out.println("Not a valid choice please pick again");
+			System.out.println("***Not a valid choice please pick again***");
 			userIn = in.nextLine().toLowerCase();
 			r = mySystem.getRestaurant(userIn.toLowerCase());
 			if(r!=null &&!(Driver2.checkCart(c1,r))) {
