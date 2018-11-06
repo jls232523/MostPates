@@ -42,4 +42,10 @@ public class Confirmation {
 	public String getEstimatedTime() {
 		return this.estimatedArrivalTime;
 	}
+	public void getEstimatedTime(double num) {
+		this.timeRemaining = (long) (this.timeOrdered + (num * 60) + (20*60));
+		String currDate = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm").format(new java.util.Date (this.timeRemaining*1000));
+		this.estimatedArrivalTime = currDate;
+		
+	}
 }

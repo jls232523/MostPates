@@ -2,6 +2,7 @@ package org.mostpates.system;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 import org.mostpates.checkout.Cashier;
@@ -12,7 +13,7 @@ import org.mostpates.shops.Restaurant;
 
 public class Driver {
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws IOException {
 		Systems mySystem = new Systems();//make system
 		
 		Restaurant r1 = new Restaurant();
@@ -109,7 +110,7 @@ public class Driver {
 		String[] commandList = null;
 		in = new Scanner(new File(args[0]));
 		Customer c;
-		Restaurant r;
+		Restaurant r = null;
 		while(in.hasNextLine()) {
 			command = in.nextLine();
 			commandList = command.split(",");
@@ -141,7 +142,7 @@ public class Driver {
 						System.out.println("Order");
 						//String dir = "https://maps.googleapis.com/maps/api/directions/json?origin="+"userAdd"+"&destination="+"storeADd"+"&key=";
 						c = mySystem.getCustomer(commandList[1].toLowerCase());
-						c.order();
+						c.order(r);
 						break;
 					case "RemoveItem":
 						System.out.println("RemoveItem");

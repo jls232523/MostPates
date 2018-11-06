@@ -1,11 +1,15 @@
 package org.mostpates.system;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Scanner;
 import org.mostpates.checkout.Coupon;
 import org.mostpates.people.Customer;
@@ -79,7 +83,7 @@ public class Driver2 {
 				check = 0;
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("order")==0) {//customer wants to place an order
-				c1.order();
+				c1.order(r);
 				check = 0;
 				break;
 			}

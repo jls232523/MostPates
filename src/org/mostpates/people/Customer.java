@@ -1,7 +1,15 @@
 package org.mostpates.people;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
 import org.mostpates.checkout.*;
 import org.mostpates.shops.Item;
+import org.mostpates.shops.Restaurant;
 
 public class Customer {
 	public String name;
@@ -44,11 +52,36 @@ public class Customer {
 	public ShoppingCart getCart() {
 		return cart;
 	}
-	public void order() {
+	public void order(Restaurant r) throws IOException {
 		System.out.print("***ORDER PLACED***");
+		try {
+		String str = new String();
+		URL direct = new URL("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+r.getAddress().replaceAll(" ", "")+"&destinations="+this.getAddress().replaceAll(" ", "")+"&key=AIzaSyBl49PQg0nL_4KAEjWXMB1hFT0xqjdTjco");
+		URLConnection direcConnect = direct.openConnection();
+		BufferedReader in2 = new BufferedReader(new InputStreamReader(direcConnect.getInputStream()));
+		String inputLine;
+		direcConnect.connect();
+		while ((inputLine = in2.readLine()) != null) {
+			if(inputLine.contains("mins")) {
+			str+=inputLine;
+			}
+		}
+			in2.close();
+			String[] s = str.split(":");
+			String s1 = s[1].split(" ")[1];
+			s1 = s1.replaceAll("\"", "");
+			double num = Double.valueOf(s1);
+			this.confirm.setOrderTime();
+			this.confirm.getEstimatedTime(num);
+			System.out.println("\nPlaced at " + this.confirm.getOrderTime());
+			System.out.println("Estimated time of arrival is " + this.confirm.getEstimatedTime());	
+			
+		}
+		catch (Exception x){
 		this.confirm.setOrderTime();
 		System.out.println("\nPlaced at " + this.confirm.getOrderTime());
 		System.out.println("Estimated time of arrival is " + this.confirm.getEstimatedTime());	
+		}
 	}
 	public void removeFromCart(Item newItem) {
 		this.getCart().removeItem(newItem);
