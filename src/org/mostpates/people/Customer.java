@@ -48,8 +48,7 @@ public class Customer {
 		System.out.print("***ORDER PLACED***");
 		this.confirm.setOrderTime();
 		System.out.println("\nPlaced at " + this.confirm.getOrderTime());
-		System.out.println("Estimated time of arrival is " + this.confirm.getEstimatedTime());
-		
+		System.out.println("Estimated time of arrival is " + this.confirm.getEstimatedTime());	
 	}
 	public void removeFromCart(Item newItem) {
 		this.getCart().removeItem(newItem);
