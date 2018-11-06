@@ -74,7 +74,7 @@ public class Customer {
 		}
 			in2.close();
 			String[] s = str.split(":");
-			String s1 = s[1].split(" ")[1];
+			String s1= s[1].split(" ")[1];
 			s1 = s1.replaceAll("\"", "");
 			double num = Double.valueOf(s1);
 			s = str2.split(":");

@@ -136,15 +136,15 @@ public class Driver2 {
 
 	private static void makeNewCustomer(String userIn,PrintWriter userFile,Customer c1,Scanner in,Systems mySystem) {//makes new customer for system through userIn
 		System.out.println("What is your name?\n");
-		userIn = in.nextLine();
+		userIn = in.nextLine().replaceAll(",", "");
 		c1.setName(userIn);
 		userFile.print(userIn + ",");
 		System.out.println("Where do you live?\n");
-		userIn = in.nextLine();
+		userIn = in.nextLine().replaceAll(",", "");
 		c1.setAddress(userIn);
 		userFile.print(userIn + ",");
 		System.out.println("Phone Number?\n");
-		userIn = in.nextLine();
+		userIn = in.nextLine().replaceAll(",", "");
 		c1.setPhone(userIn);
 		userFile.print(userIn+"\n");
 		mySystem.addCustomer(c1);
