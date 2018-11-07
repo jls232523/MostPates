@@ -58,7 +58,7 @@ public class Customer {
 		String str = new String();
 		String str2 = new String();
 		URL direct = new URL("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+r.getAddress().replaceAll(" ", "")+"&destinations="+this.getAddress().replaceAll(" ", "")+"&key=AIzaSyBl49PQg0nL_4KAEjWXMB1hFT0xqjdTjco");
-		URLConnection direcConnect = direct.openConnection();
+		URLConnection direcConnect = direct.openConnection();//opens a connection to GoogleMaps to get distance and time estimates
 		BufferedReader in2 = new BufferedReader(new InputStreamReader(direcConnect.getInputStream()));
 		String inputLine;
 		direcConnect.connect();
@@ -73,7 +73,7 @@ public class Customer {
 			}
 		}
 			in2.close();
-			String[] s = str.split(":");
+			String[] s = str.split(":");//parse file given back by GoogleMaps
 			String s1= s[1].split(" ")[1];
 			s1 = s1.replaceAll("\"", "");
 			double num = Double.valueOf(s1);
@@ -93,7 +93,7 @@ public class Customer {
 			System.out.println("Your Savings: " + this.getCart().getSavings(this.getCoupon()));
 			System.out.println("\n\n");
 		}
-		catch (Exception x){
+		catch (Exception x){//if connection doesn't go through
 		this.confirm.setOrderTime();
 		System.out.println("\nPlaced at " + this.confirm.getOrderTime());
 		System.out.println("Estimated time of arrival is " + this.confirm.getEstimatedTime());	

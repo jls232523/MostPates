@@ -179,7 +179,7 @@ public class Driver {
 		}
 		System.out.println("***Restaurant List***");
 		mySystem.printRestaurants();
-		System.out.println("***Customer List/***");
+		System.out.println("***Customer List***");
 		mySystem.printCustomers();
 		System.out.println("***Item List***");
 		mySystem.printItems();

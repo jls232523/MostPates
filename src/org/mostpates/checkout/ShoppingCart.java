@@ -22,7 +22,7 @@ public class ShoppingCart {
 	public List<Item> getItems() {
 		return this.cart;
 	}
-	public String getTotal(Coupon c) {
+	public String getTotal(Coupon c) {//gets total with coupon
 		double total= 0.0;
 		for(Item i : this.getItems()) {
 			total = total + i.getPrice();
@@ -41,7 +41,7 @@ public class ShoppingCart {
 		}
 		
 	}
-	public String getSavings(Coupon c) {
+	public String getSavings(Coupon c) {//calculate savings for customer
 		double total= 0.0;
 		double totalWCoupon = 0.0;
 		for(Item i : this.getItems()) {
