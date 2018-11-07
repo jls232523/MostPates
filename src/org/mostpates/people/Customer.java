@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DecimalFormat;
 
 import org.mostpates.checkout.*;
 import org.mostpates.shops.Item;
@@ -53,6 +54,7 @@ public class Customer {
 		return cart;
 	}
 	public void order(Restaurant r) throws IOException {
+		DecimalFormat df = new DecimalFormat("#.00"); 
 		System.out.print("***ORDER PLACED***");
 		try {
 		String str = new String();
