@@ -23,7 +23,7 @@ public class Driver2 {
 		Scanner in = null;
 		in = new Scanner(System.in);
 		File currentDir = new File("");
-		String path = currentDir.getAbsolutePath() + "/src/OutputFiles/users.txt";
+	 	String path = currentDir.getAbsolutePath() + "/src/OutputFiles/users.txt";
 		PrintWriter userFile = new PrintWriter(new BufferedWriter(new FileWriter(path,true)));
 		String userIn = "hello";
 		Restaurant r = null;
@@ -62,7 +62,7 @@ public class Driver2 {
 			if(check==0 && r!=null) {
 			r.printMenu();
 			flag = 0;
-			System.out.println("\nWhich would you like to do?(add to choose an item, cart to see cart,order to place order,coupon to enter coupon code,back to go back to restaurants,remove to remove an item or exit to cancel order and exit");
+			System.out.println("\nWhich would you like to do?(add, cart, order, coupon, back, remove, or exit)");
 			userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");;
 			}
 			if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("exit")==0) {
@@ -107,7 +107,7 @@ public class Driver2 {
 				if(userIn.toLowerCase().compareTo("exit")==0) {//bad command ask for it again
 					break;
 				}
-				System.out.println("\nWhich would you like to do?(add to choose an item, cart to see cart,order to place order,coupon to enter coupon code,back to go back to restaurants,remove to remove an item or exit to cancel order and exit");
+				System.out.println("\nWhich would you like to do?(add, cart, order, coupon, back, remove, or exit)");
 				userIn = in.nextLine().toLowerCase();
 				check = 1;
 			}
@@ -261,6 +261,9 @@ public class Driver2 {
 			flag = 1;	
 		}
 		i = r.getItem(userIn);
+		if(flag==1) {
+			return;
+		}
 		while(i==null) {
 			System.out.println("Not a valid choice please pick again (or back to back)");
 			userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");
