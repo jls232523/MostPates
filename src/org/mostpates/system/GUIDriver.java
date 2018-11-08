@@ -1,22 +1,34 @@
 package org.mostpates.system;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Scanner;
+
 import org.mostpates.checkout.Coupon;
 import org.mostpates.people.Customer;
 import org.mostpates.shops.Item;
 import org.mostpates.shops.Restaurant;
 
-public class Driver2 {
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
+public class GUIDriver extends Application {
+
 	public static void main(String[] args) throws IOException {
 		Systems mySystem = new Systems();//make system
 		mySystem.buildSystem();
@@ -31,32 +43,33 @@ public class Driver2 {
 		int flag = 0;
 		int check = 0;
 		int userCheck = 0;
+		launch(args);
 		System.out.println("***Welcome to MostPates***\nWho is trying to order food?(n for new user or any key for returning)\n");
 		userIn = in.nextLine();
-		if(userIn.toLowerCase().replaceAll("\\s+", "").compareTo("n")==0) {
-			Driver2.makeNewCustomer(userIn, userFile, c1, in, mySystem); //makes new customer 
+		if(userIn.toLowerCase().compareTo("n")==0) {
+			GUIDriver.makeNewCustomer(userIn, userFile, c1, in, mySystem); //makes new customer 
 		}
 		else {
 			System.out.println("What is your name?\n");
 			userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");
-			userCheck = Driver2.checkExistingCustomer(userIn, c1, userCheck);
+			userCheck = GUIDriver.checkExistingCustomer(userIn, c1, userCheck);
 			if(userCheck==0) { //loop to keep asking for username
 			System.out.println("Seems like there is not an account with that name enter another or press n to create an account");
 			userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");
-			userCheck = Driver2.checkExistingCustomer(userIn, c1, userCheck);
+			userCheck = GUIDriver.checkExistingCustomer(userIn, c1, userCheck);
 			while(userIn.compareTo("n")!=0 && userCheck == 0) {
 			System.out.println("Seems like there is not an account with that name enter another or press n to create an account");
 			userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");
-			userCheck = Driver2.checkExistingCustomer(userIn, c1, userCheck);
+			userCheck = GUIDriver.checkExistingCustomer(userIn, c1, userCheck);
 			}
 			}
 			if(userCheck==0) {
-				Driver2.makeNewCustomer(userIn, userFile, c1, in, mySystem); //make new customer in system
+				GUIDriver.makeNewCustomer(userIn, userFile, c1, in, mySystem); //make new customer in system
 			}
 		}
 		
 		userFile.close();
-		r = Driver2.back(mySystem, userIn, r, in,c1);
+		r = GUIDriver.back(mySystem, userIn, r, in,c1);
 		Item i = null;
 		while(userIn.toLowerCase().replaceAll("\\s+","").compareTo("exit")!=0) { //main loop to keep function going
 			if(check==0 && r!=null) {
@@ -70,7 +83,7 @@ public class Driver2 {
 				break;
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("add")==0) { //customer wants to add an item 
-				Driver2.addItem(i, r, userIn, flag, c1, in);
+				GUIDriver.addItem(i, r, userIn, flag, c1, in);
 				check = 0;
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("cart")==0) { // customer wants to see their cart
@@ -81,7 +94,7 @@ public class Driver2 {
 				check = 0;
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("remove")==0) { //customer wants to remove an item
-				Driver2.remove(c1, userIn, i, r, in, flag);
+				GUIDriver.remove(c1, userIn, i, r, in, flag);
 				check = 0;
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("order")==0) {//customer wants to place an order
@@ -92,39 +105,57 @@ public class Driver2 {
 				}
 				else {
 					System.out.println("***No Items in Cart cannot complete order.***");
-					System.out.println("\nWhich would you like to do?(add, cart, order, coupon, back, remove, or exit)");
-					userIn = in.nextLine().toLowerCase().replaceAll("\\s+", "");
 				}
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("coupon")==0) {// customer wants to use a coupon code
-				Driver2.coupon(c1, userIn, in, flag);	
+				GUIDriver.coupon(c1, userIn, in, flag);	
 				check = 0;
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0) {//customer wants to go back to restaurant list
-				r = Driver2.back(mySystem, userIn, r, in,c1);
+				r = GUIDriver.back(mySystem, userIn, r, in,c1);
 				check = 0;
 			}
 			else {
 				while(!(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("coupon")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("order")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("remove")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("cart")==0||userIn.toLowerCase().replaceAll("\\s+","").compareTo("add")==0)) {
-				if(userIn.toLowerCase().replaceAll("\\s+", "").compareTo("exit")==0) {//bad command ask for it again
+				if(userIn.toLowerCase().compareTo("exit")==0) {//bad command ask for it again
 					break;
 				}
 				System.out.println("\nWhich would you like to do?(add, cart, order, coupon, back, remove, or exit)");
-				userIn = in.nextLine().toLowerCase().replaceAll("\\s+", "");
+				userIn = in.nextLine().toLowerCase();
 				check = 1;
 			}
 			}
 			flag = 0;
 		}
 	}
-
+    @Override
+    public void start(Stage primaryStage) throws FileNotFoundException {
+        GraphicsContext gc = setupStage(primaryStage,4000,4000);
+        gc.setFill(Color.GREEN);
+        gc.fillRect(0, 0, 1000, 1000);
+        primaryStage.show();
+      
+    }
+    public GraphicsContext setupStage(Stage primaryStage, int canvas_width,
+            int canvas_height) {
+        BorderPane p = new BorderPane();
+        Canvas canvas = new Canvas(1000, 1000);
+        Border b;
+        p.setBorder(new Border(
+                new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+                        CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        p.setCenter(canvas);
+        primaryStage.setTitle("MostPates");
+        primaryStage.setScene(new Scene(p));
+        return canvas.getGraphicsContext2D();
+    }
 	private static int checkExistingCustomer(String userIn,Customer c1,int userCheck) throws FileNotFoundException {//checks if the customer already exists in the system
 		File currentDir = new File("");
 		Scanner userScanner = new Scanner(new File(currentDir.getAbsolutePath() + "/src/OutputFiles/users.txt"));
 		while(userScanner.hasNextLine()) {
 			String userLine = userScanner.nextLine();
 			String[] userLineList = userLine.split(",");
-			if(userLineList[0].toLowerCase().replaceAll("\\s+","").compareTo(userIn.toLowerCase().replaceAll("\\s+", ""))==0) {
+			if(userLineList[0].toLowerCase().replaceAll("\\s+","").compareTo(userIn.toLowerCase())==0) {
 				c1.setName(userLineList[0]);
 				c1.setAddress(userLineList[1]);
 				c1.setPhone(userLineList[2]);
@@ -159,7 +190,7 @@ public class Driver2 {
 		System.out.println("Which restaurant do you want to order from?");
 		userIn = in.nextLine();
 		r = mySystem.getRestaurant(userIn.toLowerCase());
-		if( r!=null&&!(Driver2.checkCart(c1,r)) ) {
+		if( r!=null&&!(GUIDriver.checkCart(c1,r)) ) {
 			System.out.println("WARNING: Cart has been erased");
 			c1.getCart().eraseCart();
 		}
@@ -170,7 +201,7 @@ public class Driver2 {
 			System.out.println("***Not a valid choice please pick again***");
 			userIn = in.nextLine().toLowerCase();
 			r = mySystem.getRestaurant(userIn.toLowerCase());
-			if(r!=null &&!(Driver2.checkCart(c1,r))) {
+			if(r!=null &&!(GUIDriver.checkCart(c1,r))) {
 				System.out.println("WARNING: Cart has been erased");
 				c1.getCart().eraseCart();
 			}
@@ -232,15 +263,15 @@ public class Driver2 {
 		}
 		else {
 		System.out.println("Which item do you want to remove?(or back to go back)");
-		userIn = in.nextLine().toLowerCase().replaceAll("\\s+", "");
-		if(userIn.toLowerCase().replaceAll("\\s+", "").compareTo("back")==0) {
+		userIn = in.nextLine().toLowerCase();
+		if(userIn.toLowerCase().compareTo("back")==0) {
 			flag = 1;	
 		}
 		i = r.getItem(userIn);
 		while(!(c1.getCart().getItems().contains(i))&&flag==0) {
 			System.out.println("Not a valid choice please pick again (or back to go back)");
-			userIn = in.nextLine().toLowerCase().replaceAll("\\s+", "");
-			if(userIn.toLowerCase().replaceAll("\\s+", "").compareTo("back")==0) {
+			userIn = in.nextLine().toLowerCase();
+			if(userIn.toLowerCase().compareTo("back")==0) {
 				flag = 1;
 				break;
 			}
@@ -283,4 +314,5 @@ public class Driver2 {
 
 			
 		
+
 
