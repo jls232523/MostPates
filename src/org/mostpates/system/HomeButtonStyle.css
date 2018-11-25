@@ -1,0 +1,20 @@
+.button {
+  -fx-background-color: #5189e2;
+  -fx-text-fill: white;
+  -fx-background-radius: 400px;
+}
+.button:hover {
+  -fx-background-color: #003791; 
+}
+#title{
+
+-fx-font-weight:normal;
+-fx-color:#000000;
+-fx-letter-spacing:1pt;
+-fx-word-spacing:2pt;
+-fx-font-size:7em;
+-fx-text-align:center;	
+}
+.image{
+
+}
