@@ -1,6 +1,6 @@
 package org.mostpates.system;
 
-import java.awt.TextField;
+import javafx.scene.control.TextField; 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,9 +18,12 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -48,19 +51,35 @@ public class MostPatesGUI extends Application {
     public static Systems mySystem;
     public static Restaurant r;
     public static Customer c1;
+    public Scene homepage;
+    public Scene signUp;
+    public Scene logIn;
     public static void main(String[] args) throws IOException {
         launch(args);
     }
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Button sign = new Button("SIGN UP");
-        Button log = new Button("LOG IN");
+		Button sign = new Button("Sign Up");
+        Button log = new Button("Log In");
+        Button back = new Button("Back");
+        Button backL = new Button("Back");
+        Button submit = new Button("Submit");
+        Button submitLog = new Button("Submit");
+        TextField name = new TextField();
+        TextField nameL = new TextField();
+        TextField addr = new TextField();
+        TextField phone = new TextField();
 		GraphicsContext gc = setupStage(primaryStage, SIZE_A, SIZE_D,sign,log);
         gc.setFill(Color.PEACHPUFF);
         gc.fillRect(0, 0, SIZE_A, SIZE_D);
         primaryStage.show();
-    	mySystem = new Systems();//make system
+    		mySystem = new Systems();//make system
 		mySystem.buildSystem();
+		signUp = buildSignUp(back,name,addr,phone,submit);
+		String style = getClass().getResource("HomeButtonStyle.css").toExternalForm();
+        signUp.getStylesheets().add(style);
+        logIn = buildLogin(backL,nameL,submitLog);
+        logIn.getStylesheets().add(style);
 		Scanner in = null;
 		in = new Scanner(System.in);
 		File currentDir = new File("");
@@ -68,15 +87,120 @@ public class MostPatesGUI extends Application {
 		PrintWriter userFile = new PrintWriter(new BufferedWriter(new FileWriter(path,true)));
 		Restaurant r = null;
 		Customer c1 = new Customer();
+		
+        back.setOnAction((event) -> {
+        	primaryStage.setScene(homepage);
+        });
+        backL.setOnAction((event) -> {
+        	primaryStage.setScene(homepage);
+        });
         sign.setOnAction((event) -> {
-        	primaryStage.hide();
+        	primaryStage.setScene(signUp);
 			//Driver2.makeNewCustomer(userFile, c1, in, mySystem); //makes new customer 
-
-
         });
+        submit.setOnAction((event2)->{
+    		if(allFieldsFilled(name,addr,phone)) {
+    			Alert errorAlert = new Alert(AlertType.WARNING);
+    			errorAlert.setHeaderText("Input not valid");
+    			errorAlert.setContentText("Please Fill Out All Fields");
+    			errorAlert.showAndWait();
+    		}
+    	});
+        submitLog.setOnAction((event2)->{
+    		if(allFieldsFilled(nameL)) {
+    			Alert errorAlert = new Alert(AlertType.WARNING);
+    			errorAlert.setHeaderText("Input not valid");
+    			errorAlert.setContentText("Please Fill Out All Fields");
+    			errorAlert.showAndWait();
+    		}
+    	});
         log.setOnAction((event) -> {
-           
+        	primaryStage.setScene(logIn);
         });
+	}
+
+	private Scene buildLogin(Button back, TextField name, Button submitLog) throws FileNotFoundException {
+		StackPane sp = new StackPane();
+		GridPane p = new GridPane();
+		GridPane p2 = new GridPane();
+		p2.setPadding(new Insets(16,0,0,0));
+		p2.setAlignment(Pos.TOP_CENTER);
+		 p.setAlignment(Pos.TOP_LEFT);
+           p.setPadding(new Insets(16));
+           p.setHgap(3);
+           p.setVgap(20);
+           p.setGridLinesVisible(false);
+           p.setBorder(new Border(
+	                new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+	                        CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+		Canvas canvas = new Canvas(SIZE_A, SIZE_D);
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+		Label n = new Label("Name:");
+		Label a = new Label("Address:");
+		Label ph = new Label("Phone:");
+        File currentDir = new File("");
+	 	String path = currentDir.getAbsolutePath() + "/src/InputFiles/logo.jpg";
+        Image image = new Image(new FileInputStream(path));
+        ImageView imageView = new ImageView(image);
+        p2.add(imageView, 0, 0);
+		gc.setFill(Color.PEACHPUFF);
+        gc.fillRect(0, 0, SIZE_A, SIZE_D);
+        sp.getChildren().add(canvas);
+        sp.getChildren().add(p2);
+        sp.getChildren().add(p);
+        p.add(back, 0, 0);
+        p.add(name, 21,10,20,1);
+        p.add(submitLog,34,15);
+        p.add(n,13,10);
+        submitLog.setAlignment(Pos.CENTER_RIGHT);
+        sp.setPadding(new Insets(16));
+        
+		return new Scene(sp);
+	}
+
+	private Scene buildSignUp(Button back, TextField name, TextField addr, TextField phone,Button submit) throws FileNotFoundException {
+		StackPane sp = new StackPane();
+		GridPane p = new GridPane();
+		GridPane p2 = new GridPane();
+		p2.setPadding(new Insets(16,0,0,0));
+		p2.setAlignment(Pos.TOP_CENTER);
+		 p.setAlignment(Pos.TOP_LEFT);
+           p.setPadding(new Insets(16));
+           p.setHgap(3);
+           p.setVgap(20);
+           p.setGridLinesVisible(false);
+           p.setBorder(new Border(
+	                new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+	                        CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+		Canvas canvas = new Canvas(SIZE_A, SIZE_D);
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+		Label n = new Label("Name:");
+		Label a = new Label("Address:");
+		Label ph = new Label("Phone:");
+        File currentDir = new File("");
+	 	String path = currentDir.getAbsolutePath() + "/src/InputFiles/logo.jpg";
+        Image image = new Image(new FileInputStream(path));
+        ImageView imageView = new ImageView(image);
+        p2.add(imageView, 0, 0);
+		gc.setFill(Color.PEACHPUFF);
+        gc.fillRect(0, 0, SIZE_A, SIZE_D);
+        sp.getChildren().add(canvas);
+        sp.getChildren().add(p2);
+        sp.getChildren().add(p);
+        p.add(back, 0, 0);
+        p.add(name, 21,10,20,1);
+        p.add(submit,38,22);
+        p.add(addr, 21,15,20,1);
+        p.add(phone,21,20,20,1);
+        p.add(n,13,10);
+        p.add(a, 13,15);
+        p.add(ph,13,20);
+        submit.setAlignment(Pos.CENTER_RIGHT);
+
+        
+        sp.setPadding(new Insets(16));
+        
+		return new Scene(sp);
 	}
 	public GraphicsContext setupStage(Stage primaryStage, int canvas_width,int canvas_height,Button sign,Button log) throws FileNotFoundException {
 			GridPane p = new GridPane();
@@ -121,12 +245,17 @@ public class MostPatesGUI extends Application {
 	     
 
 	        primaryStage.setTitle("MostPates");
-	        Scene t = new Scene(p);   
+	        homepage = new Scene(p);   
 	        String style = getClass().getResource("HomeButtonStyle.css").toExternalForm();
-	        t.getStylesheets().add(style);
-	        primaryStage.setScene(t);
+	        homepage.getStylesheets().add(style);
+	        primaryStage.setScene(homepage);
 	        return canvas.getGraphicsContext2D();
 	    }
-
+	private boolean allFieldsFilled(TextField name, TextField addr, TextField phone) {
+		return name.getText().isEmpty() || addr.getText().isEmpty()||phone.getText().isEmpty();
+	}
+	private boolean allFieldsFilled(TextField nameL) {
+		return nameL.getText().isEmpty();
+	}
 }
 
