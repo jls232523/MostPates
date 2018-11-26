@@ -54,7 +54,19 @@ public class MostPatesGUI extends Application {
     public Scene homepage;
     public Scene signUp;
     public Scene logIn;
+    public static PrintWriter userFile;
+    public static String path;
+    public static Scanner in;
+    public static int userCheck;
+    public static Alert confirmAlert = new Alert(AlertType.CONFIRMATION);
+    public static Alert errorAlert = new Alert(AlertType.WARNING);
     public static void main(String[] args) throws IOException {
+		in = new Scanner(System.in);
+		File currentDir = new File("");
+		path = currentDir.getAbsolutePath() + "/src/OutputFiles/users.txt";
+		userFile = new PrintWriter(new BufferedWriter(new FileWriter(path,true)));
+		r = null;
+		c1 = new Customer();
         launch(args);
     }
 	@Override
@@ -80,13 +92,7 @@ public class MostPatesGUI extends Application {
         signUp.getStylesheets().add(style);
         logIn = buildLogin(backL,nameL,submitLog);
         logIn.getStylesheets().add(style);
-		Scanner in = null;
-		in = new Scanner(System.in);
-		File currentDir = new File("");
-		String path = currentDir.getAbsolutePath() + "/src/OutputFiles/users.txt";
-		PrintWriter userFile = new PrintWriter(new BufferedWriter(new FileWriter(path,true)));
-		Restaurant r = null;
-		Customer c1 = new Customer();
+		
 		
         back.setOnAction((event) -> {
         	primaryStage.setScene(homepage);
@@ -105,6 +111,12 @@ public class MostPatesGUI extends Application {
     			errorAlert.setContentText("Please Fill Out All Fields");
     			errorAlert.showAndWait();
     		}
+    		else {
+    			Driver.makeNewCustomer(name.getText(), addr.getText(), phone.getText(), userFile, c1, in, mySystem);	
+    			confirmAlert.setHeaderText("Welcome To MostPates");
+    			confirmAlert.setContentText("User Successfully Created");
+    			confirmAlert.showAndWait();
+    		}
     	});
         submitLog.setOnAction((event2)->{
     		if(allFieldsFilled(nameL)) {
@@ -112,6 +124,35 @@ public class MostPatesGUI extends Application {
     			errorAlert.setHeaderText("Input not valid");
     			errorAlert.setContentText("Please Fill Out All Fields");
     			errorAlert.showAndWait();
+    		}
+    		else {
+    			try {
+					userCheck = Driver.checkExistingCustomer(nameL.getText().toLowerCase().replaceAll("\\s+",""), c1, userCheck);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+    			if(userCheck==0) { //loop to keep asking for username
+    				Alert errorAlert = new Alert(AlertType.WARNING);
+        			errorAlert.setHeaderText("User not Found");
+        			errorAlert.setContentText("Seems like there is not an account with that name enter another or press n to create an account");
+        			errorAlert.showAndWait();
+    				try {
+						userCheck = Driver.checkExistingCustomer(nameL.getText().toLowerCase().replaceAll("\\s+",""), c1, userCheck);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+    				while(userCheck == 0) {
+    				errorAlert.showAndWait();
+    				try {
+						userCheck = Driver.checkExistingCustomer(nameL.getText().toLowerCase().replaceAll("\\s+",""), c1, userCheck);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+    				}
+    				}
+    			confirmAlert.setHeaderText("Welcome To MostPates");
+    			confirmAlert.setContentText("User Successfully Created");
+    			confirmAlert.showAndWait();
     		}
     	});
         log.setOnAction((event) -> {
