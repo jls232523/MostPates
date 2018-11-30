@@ -110,7 +110,7 @@ public class Systems {
 		BufferedReader in2 = null ;
 		try {
 		for(Restaurant r : this.restaurantList) {
-			direct = new URL("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+r.getAddress().replaceAll(" ", "")+"&destinations="+c1.getAddress().replaceAll(" ", "")+"&key=AIzaSyBl49PQg0nL_4KAEjWXMB1hFT0xqjdTjco");
+			direct = new URL("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins="+r.getAddress().replaceAll(" ", "")+"&destinations="+c1.getAddress().replaceAll(" ", "")+"&key=");
 			direcConnect = direct.openConnection();//opens a connection to GoogleMaps to get distance and time estimates
 			in2 = new BufferedReader(new InputStreamReader(direcConnect.getInputStream()));
 			String inputLine;
