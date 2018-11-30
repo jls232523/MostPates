@@ -137,15 +137,19 @@ public class Driver {
 	}
 
 	public static void makeNewCustomer(String name,String addr,String phone,PrintWriter userFile,Customer c1,Scanner in,Systems mySystem) {//makes new customer for system through userIn
+		userFile.append("\n");
 		c1.setName(name.replaceAll(",",""));
-		userFile.print(name + ",");
+		//userFile.print(name + ",");
+		userFile.append(name + ",");
 
 		c1.setAddress(addr.replaceAll(",", ""));
-		userFile.print(addr + ",");
-
+		//userFile.print(addr + ",");
+		userFile.append(addr + ",");
 		c1.setPhone(phone.replaceAll(",", ""));
-		userFile.print(phone+"\n");
+		//userFile.print(phone+"\n");
+		userFile.append(phone + ",");
 		mySystem.addCustomer(c1);
+		userFile.close();
 		
 	}
 

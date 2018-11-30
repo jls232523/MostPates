@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.Scanner;
 
 import org.mostpates.people.Customer;
@@ -54,10 +55,12 @@ public class MostPatesGUI extends Application {
     public Scene homepage;
     public Scene signUp;
     public Scene logIn;
+    public Scene restaurant;
     public static PrintWriter userFile;
     public static String path;
     public static Scanner in;
     public static int userCheck;
+	Color eggshell = Color.web("0xfffff4");
     public static Alert confirmAlert = new Alert(AlertType.CONFIRMATION);
     public static Alert errorAlert = new Alert(AlertType.WARNING);
     public static void main(String[] args) throws IOException {
@@ -75,6 +78,7 @@ public class MostPatesGUI extends Application {
         Button log = new Button("Log In");
         Button back = new Button("Back");
         Button backL = new Button("Back");
+        Button backR = new Button("Log Out");
         Button submit = new Button("Submit");
         Button submitLog = new Button("Submit");
         TextField name = new TextField();
@@ -82,7 +86,8 @@ public class MostPatesGUI extends Application {
         TextField addr = new TextField();
         TextField phone = new TextField();
 		GraphicsContext gc = setupStage(primaryStage, SIZE_A, SIZE_D,sign,log);
-        gc.setFill(Color.PEACHPUFF);
+
+        gc.setFill(eggshell);
         gc.fillRect(0, 0, SIZE_A, SIZE_D);
         primaryStage.show();
     		mySystem = new Systems();//make system
@@ -92,12 +97,16 @@ public class MostPatesGUI extends Application {
         signUp.getStylesheets().add(style);
         logIn = buildLogin(backL,nameL,submitLog);
         logIn.getStylesheets().add(style);
-		
+		restaurant = buildRestaurantScreen(backR);
+		restaurant.getStylesheets().add(style);
 		
         back.setOnAction((event) -> {
         	primaryStage.setScene(homepage);
         });
         backL.setOnAction((event) -> {
+        	primaryStage.setScene(homepage);
+        });
+        backR.setOnAction((event) -> {
         	primaryStage.setScene(homepage);
         });
         sign.setOnAction((event) -> {
@@ -124,6 +133,7 @@ public class MostPatesGUI extends Application {
     			errorAlert.setHeaderText("Input not valid");
     			errorAlert.setContentText("Please Fill Out All Fields");
     			errorAlert.showAndWait();
+    			
     		}
     		else {
     			try {
@@ -153,6 +163,16 @@ public class MostPatesGUI extends Application {
     			confirmAlert.setHeaderText("Welcome To MostPates");
     			confirmAlert.setContentText("User Successfully Created");
     			confirmAlert.showAndWait();
+    			primaryStage.setScene(restaurant);
+    			Collections.sort(Systems.restaurantList);
+    			try {
+					mySystem.getDistances(c1);
+				} catch (IOException e) {
+					
+				}
+    			primaryStage.setScene(restaurant);
+    			Collections.sort(Systems.restaurantList);
+    			
     		}
     	});
         log.setOnAction((event) -> {
@@ -160,10 +180,38 @@ public class MostPatesGUI extends Application {
         });
 	}
 
+	private Scene buildRestaurantScreen(Button backR) {
+		StackPane sp = new StackPane();
+		GridPane p = new GridPane();
+		GridPane p2 = new GridPane();
+		p2.setPadding(new Insets(16,0,0,0));
+		p2.setAlignment(Pos.TOP_CENTER);
+		p.setAlignment(Pos.TOP_LEFT);
+        p.setPadding(new Insets(16));
+        p.setHgap(3);
+        p.setVgap(20);
+        p.setGridLinesVisible(false);
+        p.setBorder(new Border(
+	                new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+	                        CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+		Canvas canvas = new Canvas(SIZE_A, SIZE_D);
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+		gc.setFill(eggshell);
+        gc.fillRect(0, 0, SIZE_A, SIZE_D);
+     	p.add(backR, 0, 0);
+        sp.getChildren().add(canvas);
+       	sp.getChildren().add(p2);
+       	sp.getChildren().add(p);
+       	sp.setPadding(new Insets(16));
+       	
+        int i = 0;
+		return (new Scene(sp));
+	}
 	private Scene buildLogin(Button back, TextField name, Button submitLog) throws FileNotFoundException {
 		StackPane sp = new StackPane();
 		GridPane p = new GridPane();
 		GridPane p2 = new GridPane();
+		
 		p2.setPadding(new Insets(16,0,0,0));
 		p2.setAlignment(Pos.TOP_CENTER);
 		 p.setAlignment(Pos.TOP_LEFT);
@@ -184,7 +232,7 @@ public class MostPatesGUI extends Application {
         Image image = new Image(new FileInputStream(path));
         ImageView imageView = new ImageView(image);
         p2.add(imageView, 0, 0);
-		gc.setFill(Color.PEACHPUFF);
+		gc.setFill(eggshell);
         gc.fillRect(0, 0, SIZE_A, SIZE_D);
         sp.getChildren().add(canvas);
         sp.getChildren().add(p2);
@@ -223,7 +271,7 @@ public class MostPatesGUI extends Application {
         Image image = new Image(new FileInputStream(path));
         ImageView imageView = new ImageView(image);
         p2.add(imageView, 0, 0);
-		gc.setFill(Color.PEACHPUFF);
+		gc.setFill(eggshell);
         gc.fillRect(0, 0, SIZE_A, SIZE_D);
         sp.getChildren().add(canvas);
         sp.getChildren().add(p2);

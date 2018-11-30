@@ -1,22 +1,42 @@
 package org.mostpates.shops;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Restaurant {
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+public class Restaurant implements Comparable<Restaurant> {
 	String name;
 	String address;
 	List<Item> menu;
+	Double distanceToCustomer;
+	ImageView image;
 	public Restaurant() {
 		name = "unknown";
 		address = "unknown";
 		menu = new ArrayList<Item>();
+		distanceToCustomer = 0.0;
+	}
+	public void setImage(String path) throws FileNotFoundException {
+		File currentDir = new File("");
+		path = currentDir.getAbsolutePath() + "/src/InputFiles/" + path;
+
+		 Image image = new Image(new FileInputStream(path));
+		 ImageView imageView = new ImageView(image);
+		 this.image = imageView;
 	}
 	public String getName() {
 		return this.name;
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public void setDistanceToCustomer(Double dtc) {
+		this.distanceToCustomer = dtc;
 	}
 	public String getAddress() {
 		return this.address;
@@ -49,5 +69,17 @@ public class Restaurant {
 			}
 		}
 		return null;
+	}
+	@Override
+	public int compareTo(Restaurant o) {
+		if(this.distanceToCustomer<o.distanceToCustomer) {
+			return -1;
+		}
+		else if(this.distanceToCustomer>o.distanceToCustomer) {
+			return 1;
+		}
+		else {
+		return 0;
+		}
 	}
 }
