@@ -234,10 +234,10 @@ public class MostPatesGUI extends Application {
 	                        CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 		Canvas canvas = new Canvas(SIZE_A, SIZE_D);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
-		Label n = new Label("Name:");
-		Label a = new Label("Address:");
-		Label ph = new Label("Phone:");
         File currentDir = new File("");
+        name.setPromptText("Name");
+        name.setAlignment(Pos.CENTER);
+        
 	 	String path = currentDir.getAbsolutePath() + "/src/InputFiles/logo.jpg";
         Image image = new Image(new FileInputStream(path));
         ImageView imageView = new ImageView(image);
@@ -250,7 +250,6 @@ public class MostPatesGUI extends Application {
         p.add(back, 0, 0);
         p.add(name, 21,10,20,1);
         p.add(submitLog,34,15);
-        p.add(n,13,10);
         submitLog.setAlignment(Pos.CENTER_RIGHT);
         sp.setPadding(new Insets(16));
         
@@ -273,9 +272,7 @@ public class MostPatesGUI extends Application {
 	                        CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 		Canvas canvas = new Canvas(SIZE_A, SIZE_D);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
-		Label n = new Label("Name:");
-		Label a = new Label("Address:");
-		Label ph = new Label("Phone:");
+		
         File currentDir = new File("");
 	 	String path = currentDir.getAbsolutePath() + "/src/InputFiles/logo.jpg";
         Image image = new Image(new FileInputStream(path));
@@ -291,9 +288,12 @@ public class MostPatesGUI extends Application {
         p.add(submit,38,22);
         p.add(addr, 21,15,20,1);
         p.add(phone,21,20,20,1);
-        p.add(n,13,10);
-        p.add(a, 13,15);
-        p.add(ph,13,20);
+        name.setPromptText("Name");
+        name.setAlignment(Pos.CENTER);
+        addr.setPromptText("Address");
+        addr.setAlignment(Pos.CENTER);
+        phone.setPromptText("Phone");
+        phone.setAlignment(Pos.CENTER);
         submit.setAlignment(Pos.CENTER_RIGHT);
 
         
