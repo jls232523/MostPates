@@ -104,7 +104,7 @@ public class Systems {
 		}
 	}
 	public void getDistances(Customer c1) throws IOException {
-		String str="",str2 = "";
+		/*String str="",str2 = "";
 		URL direct;	
 		URLConnection direcConnect;
 		BufferedReader in2 = null ;
@@ -146,7 +146,7 @@ public class Systems {
 		}
 		 finally {
 			 in2.close();
-		 }
+		 }*/
 	}
 }
 

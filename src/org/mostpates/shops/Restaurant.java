@@ -6,6 +6,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -15,19 +20,25 @@ public class Restaurant implements Comparable<Restaurant> {
 	List<Item> menu;
 	Double distanceToCustomer;
 	ImageView image;
+	String dist;
+	SimpleStringProperty distance;
+	
 	public Restaurant() {
 		name = "unknown";
 		address = "unknown";
 		menu = new ArrayList<Item>();
 		distanceToCustomer = 0.0;
+		dist = "";
+		
+		
 	}
 	public void setImage(String path) throws FileNotFoundException {
 		File currentDir = new File("");
 		path = currentDir.getAbsolutePath() + "/src/InputFiles/" + path;
-
-		 Image image = new Image(new FileInputStream(path));
-		 ImageView imageView = new ImageView(image);
-		 this.image = imageView;
+		Image image = new Image(new FileInputStream(path));
+		ImageView imageView = new ImageView(image);
+		this.image = imageView;
+		
 	}
 	public String getName() {
 		return this.name;
@@ -37,6 +48,12 @@ public class Restaurant implements Comparable<Restaurant> {
 	}
 	public void setDistanceToCustomer(Double dtc) {
 		this.distanceToCustomer = dtc;
+		dist = String.valueOf(distanceToCustomer);
+        this.distance = new SimpleStringProperty(dist);
+      
+	}
+	public String getDistance() {
+		return this.dist + " miles away";
 	}
 	public String getAddress() {
 		return this.address;
@@ -82,4 +99,5 @@ public class Restaurant implements Comparable<Restaurant> {
 		return 0;
 		}
 	}
+
 }
