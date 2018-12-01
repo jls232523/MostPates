@@ -87,6 +87,8 @@ public class MostPatesGUI extends Application {
         Button order = new Button("Order");
         Button submitLog = new Button("Submit");
         Button add = new Button("Add Item");
+        Button cart = new Button("Cart");
+        Button cartR = new Button("Cart");
         TextField name = new TextField();
         TextField nameL = new TextField();
         TextField addr = new TextField();
@@ -170,7 +172,7 @@ public class MostPatesGUI extends Application {
 				} catch (IOException e) {
 					
 				}
-    			restaurant = buildRestaurantScreen(backR);
+    			restaurant = buildRestaurantScreen(backR,cartR);
     			restaurant.getStylesheets().add(style);
     			primaryStage.setScene(restaurant);
     			Collections.sort(Systems.restaurantList);
@@ -180,7 +182,7 @@ public class MostPatesGUI extends Application {
            	    if (newSelection != null) {
            	       r = newSelection;
            	       try {
-					menu = buildMenu(r,backM,order,add,addField);
+					menu = buildMenu(r,backM,order,add,addField,cart);
 					menu.getStylesheets().add(style);
 				} catch (FileNotFoundException e) {
 					errorAlert.setHeaderText("Restaurant Unavailable");
@@ -196,7 +198,7 @@ public class MostPatesGUI extends Application {
         });
 	}
 
-	private Scene buildMenu(Restaurant r2, Button backM, Button order, Button add, TextField addField) throws FileNotFoundException {
+	private Scene buildMenu(Restaurant r2, Button backM, Button order, Button add, TextField addField, Button cart) throws FileNotFoundException {
 		StackPane sp = new StackPane();
 		GridPane p = new GridPane();
 		GridPane p2 = new GridPane();
@@ -273,11 +275,12 @@ public class MostPatesGUI extends Application {
         p.add(backM, 0, 0);
         p.add(order, 1, yPos+10);
         p.add(add, 5, yPos + 10);
+        p.add(cart, 0, 2);
         sp.setPadding(new Insets(16));
         
 		return new Scene(sp);
 	}
-	private Scene buildRestaurantScreen(Button backR) {
+	private Scene buildRestaurantScreen(Button backR, Button cartR) {
 		StackPane sp = new StackPane();
 		GridPane p = new GridPane();
 		GridPane p2 = new GridPane();
@@ -313,7 +316,7 @@ public class MostPatesGUI extends Application {
        	table.maxWidth(1200);
        	table.setMaxHeight(255);
        	table.setEditable(false);
-
+       	p.add(cartR, 0, 1);
 		return (new Scene(sp));
 	}
 	private Scene buildLogin(Button back, TextField name, Button submitLog) throws FileNotFoundException {
