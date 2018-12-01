@@ -4,3 +4,4 @@ John Johnson,14610 S Somerton Ave Somerton Arizona 85350,9284881508
 MarekPerez,850 E wetmore Rd Tucson AZ 85719,4803705101
 
 Jack Johnson,1920 N 1st Ave,3705101,
+Alejandro Quintana,850 East Wetmore Rd,(928) 488-1508,

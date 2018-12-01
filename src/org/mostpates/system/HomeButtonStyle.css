@@ -22,16 +22,17 @@
 .label{
 -fx-font-size: 1.5em;
 }
-/* .text-field {
-	-fx-background-color: -fx-text-box-border, -fx-background ;
-    -fx-background-insets: 0, 0 0 3 0 ;
-    -fx-background-radius: 0 ;
-      -fx-border-top-left-radius: 4000px; 
-   -fx-border-top-right-radius: 4000px; 
+#item{
+-fx-font-size: 1em;
+-fx-text-fill: #072f70;		
 }
-.text-field:focused {
-    -fx-background-color: #fffff4;
-}*/
+#price
+{
+	-fx-font-size: .75em;
+-fx-text-fill: #072f70;	
+}
+
+
 .text-field {
     -fx-background-color: #a9a9a9 ,  #fffff4,  #fffff4;
     -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;

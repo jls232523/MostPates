@@ -10,10 +10,12 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
 import org.mostpates.people.Customer;
+import org.mostpates.shops.Item;
 import org.mostpates.shops.Restaurant;
 
 import javafx.application.Application;
@@ -41,7 +43,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class MostPatesGUI extends Application {
@@ -52,11 +53,15 @@ public class MostPatesGUI extends Application {
     public Scene homepage;
     public Scene signUp;
     public Scene logIn;
+    public Scene menu;
     public Scene restaurant;
     public static PrintWriter userFile;
     public static String path;
     public static Scanner in;
     public static int userCheck;
+   
+    static ArrayList<TextField> menuItems;
+    TableView<Restaurant> table = new TableView<Restaurant>();
 	Color eggshell = Color.web("0xfffff4");
     public static Alert confirmAlert = new Alert(AlertType.CONFIRMATION);
     public static Alert errorAlert = new Alert(AlertType.WARNING);
@@ -67,6 +72,7 @@ public class MostPatesGUI extends Application {
 		userFile = new PrintWriter(new BufferedWriter(new FileWriter(path,true)));
 		r = null;
 		c1 = new Customer();
+		menuItems = new ArrayList<TextField>();
         launch(args);
     }
 	@Override
@@ -75,13 +81,17 @@ public class MostPatesGUI extends Application {
         Button log = new Button("Log In");
         Button back = new Button("Back");
         Button backL = new Button("Back");
+        Button backM = new Button("Back");
         Button backR = new Button("Log Out");
         Button submit = new Button("Submit");
+        Button order = new Button("Order");
         Button submitLog = new Button("Submit");
+        Button add = new Button("Add Item");
         TextField name = new TextField();
         TextField nameL = new TextField();
         TextField addr = new TextField();
         TextField phone = new TextField();
+        TextField addField = new TextField();
 		GraphicsContext gc = setupStage(primaryStage, SIZE_A, SIZE_D,sign,log);
 
         gc.setFill(eggshell);
@@ -94,8 +104,8 @@ public class MostPatesGUI extends Application {
         signUp.getStylesheets().add(style);
         logIn = buildLogin(backL,nameL,submitLog);
         logIn.getStylesheets().add(style);
-		
-		
+        homepage.getStylesheets().add(style);
+	
         back.setOnAction((event) -> {
         	primaryStage.setScene(homepage);
         });
@@ -105,9 +115,15 @@ public class MostPatesGUI extends Application {
         backR.setOnAction((event) -> {
         	primaryStage.setScene(homepage);
         });
+        backM.setOnAction((event) -> {
+        	primaryStage.setScene(restaurant);
+        });
         sign.setOnAction((event) -> {
         	primaryStage.setScene(signUp);
 			//Driver2.makeNewCustomer(userFile, c1, in, mySystem); //makes new customer 
+        });
+        order.setOnAction((event) -> {
+        	primaryStage.setScene(homepage);
         });
         submit.setOnAction((event2)->{
     		if(allFieldsFilled(name,addr,phone)) {
@@ -142,19 +158,6 @@ public class MostPatesGUI extends Application {
         			errorAlert.setHeaderText("User not Found");
         			errorAlert.setContentText("Seems like there is not an account with that name. Please enter another");
         			errorAlert.show();
-    				/*try {
-						userCheck = Driver.checkExistingCustomer(nameL.getText().toLowerCase().replaceAll("\\s+",""), c1, userCheck);
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-    				while(userCheck == 0) {
-    				errorAlert.showAndWait();
-    				try {
-						userCheck = Driver.checkExistingCustomer(nameL.getText().toLowerCase().replaceAll("\\s+",""), c1, userCheck);
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-    				}*/
     				}
     			else {
     			confirmAlert.setHeaderText("Welcome To MostPates");
@@ -173,12 +176,107 @@ public class MostPatesGUI extends Application {
     			Collections.sort(Systems.restaurantList);
     			}
     		}
+           	table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+           	    if (newSelection != null) {
+           	       r = newSelection;
+           	       try {
+					menu = buildMenu(r,backM,order,add,addField);
+					menu.getStylesheets().add(style);
+				} catch (FileNotFoundException e) {
+					errorAlert.setHeaderText("Restaurant Unavailable");
+					errorAlert.setContentText("Sorry this Restaurant is not in service right now");
+	    				errorAlert.showAndWait();
+				}
+           	       primaryStage.setScene(menu);
+           	    }
+           	});
     	});
         log.setOnAction((event) -> {
         	primaryStage.setScene(logIn);
         });
 	}
 
+	private Scene buildMenu(Restaurant r2, Button backM, Button order, Button add, TextField addField) throws FileNotFoundException {
+		StackPane sp = new StackPane();
+		GridPane p = new GridPane();
+		GridPane p2 = new GridPane();
+		
+		p2.setPadding(new Insets(16,0,0,0));
+		p2.setAlignment(Pos.TOP_CENTER);
+		 p.setAlignment(Pos.TOP_LEFT);
+           p.setPadding(new Insets(16));
+           p.setHgap(30);
+           p.setVgap(2);
+           p.setGridLinesVisible(false);
+           p.setBorder(new Border(
+	                new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+	                        CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+		Canvas canvas = new Canvas(SIZE_A, SIZE_D);
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+        File currentDir = new File("");
+        int count = 0;
+        int xPos = 1;
+        int yPos = 100;
+        Label t3 = null;
+        for (Item i : r2.getMenu()) {
+        		if(count % 2 == 0) {
+        			xPos = 1;
+        			yPos += 4;  			
+        		}
+        		if((count+1)%2==0) {
+        			Label t = new Label(" " + i.getName());
+        			if(String.valueOf(i.getPrice()).endsWith("0")) {
+        			t3 = new Label(" $"+i.getPrice() + "0");
+        			}
+        			else {
+        				t3 = new Label(" $"+i.getPrice());
+        			}
+            		t.setId("item");
+            		t3.setId("price");
+            		t.setAlignment(Pos.CENTER);
+            		p.add(t, xPos, yPos,4,1);
+            		p.add(t3, xPos, yPos+1);
+            		TextField t2 = new TextField();
+            		t2.setId(i.getName());
+            		menuItems.add(t2);
+            		xPos += 4;
+            		count+=1;
+        		}
+        		else {
+        			Label t = new Label(i.getName());
+        			if(String.valueOf(i.getPrice()).endsWith("0")) {
+            			t3 = new Label(" $"+i.getPrice() + "0");
+            			}
+            			else {
+            				t3 = new Label(" $"+i.getPrice());
+            			}
+        			t3.setId("price");
+            		t.setId("item");
+            		t.setAlignment(Pos.CENTER);
+            		p.add(t, xPos, yPos,4,1);
+            		p.add(t3, xPos, yPos+1);
+            		TextField t2 = new TextField();
+            		t2.setId(i.getName());
+            		menuItems.add(t2);
+            		xPos += 4;
+            		count+=1;
+        		}
+        }
+	
+        
+        p2.add(r2.getImage(), 0, 0);
+		gc.setFill(eggshell);
+        gc.fillRect(0, 0, SIZE_A, SIZE_D);
+        sp.getChildren().add(canvas);
+        sp.getChildren().add(p2);
+        sp.getChildren().add(p);
+        p.add(backM, 0, 0);
+        p.add(order, 1, yPos+10);
+        p.add(add, 5, yPos + 10);
+        sp.setPadding(new Insets(16));
+        
+		return new Scene(sp);
+	}
 	private Scene buildRestaurantScreen(Button backR) {
 		StackPane sp = new StackPane();
 		GridPane p = new GridPane();
@@ -202,8 +300,8 @@ public class MostPatesGUI extends Application {
        	sp.getChildren().add(p2);
        	sp.getChildren().add(p);
        	sp.setPadding(new Insets(16));
+       	
         ObservableList<Restaurant> restList = FXCollections.observableArrayList(Systems.restaurantList);
-       	TableView<Restaurant> table = new TableView<Restaurant>();
         table.setItems(restList);
         TableColumn<Restaurant,String> firstNameCol = new TableColumn<Restaurant, String>("Restaurant");
         firstNameCol.setCellValueFactory(new PropertyValueFactory<Restaurant, String>("name"));
@@ -215,6 +313,7 @@ public class MostPatesGUI extends Application {
        	table.maxWidth(1200);
        	table.setMaxHeight(255);
        	table.setEditable(false);
+
 		return (new Scene(sp));
 	}
 	private Scene buildLogin(Button back, TextField name, Button submitLog) throws FileNotFoundException {
@@ -238,7 +337,7 @@ public class MostPatesGUI extends Application {
         name.setPromptText("Name");
         name.setAlignment(Pos.CENTER);
         
-	 	String path = currentDir.getAbsolutePath() + "/src/InputFiles/logo.jpg";
+	 	String path = currentDir.getAbsolutePath() + "/src/InputFiles/logoman.png";
         Image image = new Image(new FileInputStream(path));
         ImageView imageView = new ImageView(image);
         p2.add(imageView, 0, 0);
@@ -248,8 +347,8 @@ public class MostPatesGUI extends Application {
         sp.getChildren().add(p2);
         sp.getChildren().add(p);
         p.add(back, 0, 0);
-        p.add(name, 21,10,20,1);
-        p.add(submitLog,34,15);
+        p.add(name, 34,17,20,1);
+        p.add(submitLog,51,22);
         submitLog.setAlignment(Pos.CENTER_RIGHT);
         sp.setPadding(new Insets(16));
         
@@ -274,7 +373,7 @@ public class MostPatesGUI extends Application {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		
         File currentDir = new File("");
-	 	String path = currentDir.getAbsolutePath() + "/src/InputFiles/logo.jpg";
+	 	String path = currentDir.getAbsolutePath() + "/src/InputFiles/logoman.png";
         Image image = new Image(new FileInputStream(path));
         ImageView imageView = new ImageView(image);
         p2.add(imageView, 0, 0);
@@ -284,10 +383,11 @@ public class MostPatesGUI extends Application {
         sp.getChildren().add(p2);
         sp.getChildren().add(p);
         p.add(back, 0, 0);
-        p.add(name, 21,10,20,1);
-        p.add(submit,38,22);
-        p.add(addr, 21,15,20,1);
-        p.add(phone,21,20,20,1);
+        p.add(name, 34,10,20,1);
+        p.add(submit,51,22);
+        p.add(addr, 34,15,20,1);
+        p.add(phone,34,20,20,1);
+        submit.setMaxSize(100,100);
         name.setPromptText("Name");
         name.setAlignment(Pos.CENTER);
         addr.setPromptText("Address");
@@ -316,7 +416,7 @@ public class MostPatesGUI extends Application {
 	        final int num_items = 8;
 	        VBox input_box = new VBox(num_items);
 	        File currentDir = new File("");
-		 	String path = currentDir.getAbsolutePath() + "/src/InputFiles/homeImage.png";
+		 	String path = currentDir.getAbsolutePath() + "/src/InputFiles/logo.png";
 	        Image image = new Image(new FileInputStream(path));
 	        ImageView imageView = new ImageView(image);
 			Label t1 = new Label();
@@ -335,8 +435,6 @@ public class MostPatesGUI extends Application {
 	        input_box.getChildren().add(log);
 	        sign.setMaxSize(100, 100);
 	        log.setMaxSize(100, 100);      
-	        sign.setShape( new Rectangle(100, 100, 100,100));
-	        log.setShape( new Rectangle(100, 100, 100,100));
 	        input_box.setAlignment(Pos.CENTER);
 			
 	        p.getChildren().add(canvas);

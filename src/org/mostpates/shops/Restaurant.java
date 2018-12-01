@@ -11,6 +11,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -98,6 +99,9 @@ public class Restaurant implements Comparable<Restaurant> {
 		else {
 		return 0;
 		}
+	}
+	public ImageView getImage() {
+		return this.image;
 	}
 
 }
