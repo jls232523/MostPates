@@ -100,7 +100,7 @@ public class Driver {
 				}
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("coupon")==0) {// customer wants to use a coupon code
-				Driver.coupon(c1, userIn, in, flag);	
+				Driver.coupon(c1, userIn, null);	
 				check = 0;
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0) {//customer wants to go back to restaurant list
@@ -191,41 +191,24 @@ public class Driver {
 		return true;
 	}
 
-	public static void coupon(Customer c1, String userIn, Scanner in, int flag) {//determines if coupon code is valid
+	public static void coupon(Customer c1, String userIn, Alert confirmAlert) {//determines if coupon code is valid
 		Coupon temp = c1.getCoupon();
-		if(temp.getName().compareTo("unknown")==0) {
-		System.out.print("Enter in your coupon code");
-		userIn = in.nextLine().toLowerCase();
+
 		if(Coupon.checkValid(userIn)) {
-			flag =1;
 			c1.getCoupon().setName(userIn);
 			c1.setPercentOff(Coupon.getValidCodes().get(userIn));
-			System.out.println(c1.getCoupon().getName() + " successfully added to your account " + c1.getCoupon().getPercentageOff() + "% will be taken off at checkout.");
+			confirmAlert.setHeaderText("Coupon Entered Successfully");
+			confirmAlert.setContentText(c1.getCoupon().getPercentageOff() + "% will be taken off at checkout.");
+			confirmAlert.showAndWait();
+		
 		}
 		else {
-			System.out.println("Not a valid code please try again or type back to go back");
-			userIn = in.nextLine().toLowerCase();
-			if(userIn.compareTo("back")!=0) {
-				while(!(Coupon.checkValid(userIn))) {
-					if(userIn.toLowerCase().compareTo("back")==0) {
-						break;
-					}
-					System.out.println("Not a valid code please try again (or back to back)");
-					userIn = in.nextLine().toLowerCase();
+			confirmAlert.setHeaderText("Coupon Not Valid");
+			confirmAlert.setContentText("Not a valid code.");
+			confirmAlert.showAndWait();
 					
 				}
-			}
-		}
-		if(Coupon.checkValid(userIn) && flag !=1) {
-			c1.getCoupon().setName(userIn);
-			c1.setPercentOff(Coupon.getValidCodes().get(userIn));
-			System.out.println(c1.getCoupon().getName() + " successfully added to your account " + c1.getCoupon().getPercentageOff() + "% will be taken off at checkout.");
-		}
-		}
-		else {
-			System.out.println("You already have an active coupon code.");
-		}
-		
+	
 	}
 
 	public static void remove(Customer c1, String userIn, Item i,Restaurant r,Scanner in, int flag) {//removes item from cart

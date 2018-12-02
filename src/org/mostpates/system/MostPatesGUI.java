@@ -1,6 +1,7 @@
 package org.mostpates.system;
 
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.BufferedWriter;
@@ -14,6 +15,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Scanner;
 
 import org.mostpates.people.Customer;
@@ -100,6 +102,7 @@ public class MostPatesGUI extends Application {
         Button cartR = new Button("Cart");
         Button backC = new Button("Back");
         Button placeOrder = new Button("Place Order");
+        Button coupon = new Button("Coupon");
         TextField name = new TextField();
         TextField nameL = new TextField();
         TextField addr = new TextField();
@@ -128,6 +131,8 @@ public class MostPatesGUI extends Application {
         });
         backR.setOnAction((event) -> {
         	primaryStage.setScene(homepage);
+        	c1 = new Customer();
+        	r= new Restaurant();
         });
         backM.setOnAction((event) -> {
         	primaryStage.setScene(restaurant);
@@ -137,13 +142,28 @@ public class MostPatesGUI extends Application {
         });
         sign.setOnAction((event) -> {
         	primaryStage.setScene(signUp);
-			//Driver2.makeNewCustomer(userFile, c1, in, mySystem); //makes new customer 
+        });
+        coupon.setOnAction((event) -> {
+        	TextInputDialog dialog = new TextInputDialog("Coupon");      	 
+        	dialog.setTitle("Coupon Code");
+        	dialog.setHeaderText("Enter your code");
+        	dialog.setContentText("Code:");
+        	Optional<String> result = dialog.showAndWait();
+        	String code = result.get();
+        	Driver.coupon(c1, code,confirmAlert);
+        	try {
+				userCart = buildCart(placeOrder,backC,r,c1, primaryStage,coupon);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+            userCart.getStylesheets().add(style);
+            	primaryStage.setScene(userCart);  	
         });
         placeOrder.setOnAction((event) -> {
         		ArrayList<Label> label = c1.placeOrder(r);
         		Alert errorAlert = new Alert(AlertType.INFORMATION);
     			errorAlert.setHeaderText("ORDER PLACED");
-    			errorAlert.setContentText(label.get(0).getText() +"\n" + label.get(1).getText()+"\n"  + label.get(2).getText()+"\n"  + label.get(3).getText()+"\n"+label.get(4).getText()+"\n" );
+    			errorAlert.setContentText(label.get(0).getText() +"\n" + label.get(1).getText()+"\n"  + label.get(2).getText()+"\n"  + label.get(3).getText()+"\n"+label.get(4).getText()+"\n"+label.get(5).getText() );
     			errorAlert.showAndWait();
     			c1.getCart().eraseCart();
     			primaryStage.setScene(homepage);
@@ -151,7 +171,7 @@ public class MostPatesGUI extends Application {
         });
         cart.setOnAction((event)->{
         	try {
-				userCart = buildCart(placeOrder,backC,r,c1, primaryStage);
+				userCart = buildCart(placeOrder,backC,r,c1, primaryStage,coupon);
 			} catch (IOException e) {
 				
 				e.printStackTrace();
@@ -163,7 +183,7 @@ public class MostPatesGUI extends Application {
         cartR.setOnAction((event)->{
         	try {
         	if(Driver.checkCart(c1, r)) {
-        	userCart = buildCart(placeOrder,backC,r,c1, primaryStage);
+        	userCart = buildCart(placeOrder,backC,r,c1, primaryStage,coupon);
         userCart.getStylesheets().add(style);
         	primaryStage.setScene(userCart);
         	}
@@ -252,7 +272,7 @@ public class MostPatesGUI extends Application {
         });
 	}
 
-	private Scene buildCart(Button placeOrder, Button backC, Restaurant r, Customer c,Stage primaryStage) throws IOException {
+	private Scene buildCart(Button placeOrder, Button backC, Restaurant r, Customer c,Stage primaryStage, Button coupon) throws IOException {
 		StackPane sp = new StackPane();
 		GridPane p = new GridPane();
 		GridPane p2 = new GridPane();
@@ -276,10 +296,10 @@ public class MostPatesGUI extends Application {
         sp.getChildren().add(p2);
         sp.getChildren().add(p);
         p.add(backC, 0, 0,1,2);
-        p.add(placeOrder, 0, 2);
+        p.add(placeOrder, 0, 3);
         Label rst = new Label(r.getName());
         int i = 0;
-        int j = 3;
+        int j = 4;
         p2.getChildren().add(rst);
         rst.setAlignment(Pos.TOP_CENTER);
         for(Item i1 : c.cart.getItems()) {
@@ -291,7 +311,7 @@ public class MostPatesGUI extends Application {
     			String name = i1.getName();
     			Driver.remove(c, i1, r,confirmAlert);
     			try {
-					userCart = buildCart(placeOrder,backC,r,c1, primaryStage);
+					userCart = buildCart(placeOrder,backC,r,c1, primaryStage,coupon);
 					String style = getClass().getResource("HomeButtonStyle.css").toExternalForm();
 					userCart.getStylesheets().add(style);
 					primaryStage.setScene(userCart);	
@@ -320,6 +340,9 @@ public class MostPatesGUI extends Application {
         	if(q==4) {
         		p.add(totals.get(q), 0, j);
         	}
+         	if(q==5) {
+        		p.add(totals.get(q), 0, j);
+        	}
         }
         URL direct;
 		URLConnection direcConnect;
@@ -328,7 +351,7 @@ public class MostPatesGUI extends Application {
         	ImageView mappp = new ImageView(mapp);
         p.add(mappp,0,j+2,10,10);    
         sp.setPadding(new Insets(16));
-       
+        p.add(coupon, 0, 2);
 		return new Scene(sp);
 	}
 

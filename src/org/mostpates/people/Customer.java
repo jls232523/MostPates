@@ -183,6 +183,8 @@ public class Customer {
 			labels.add(total);
 			//System.out.println("Delivery Fee is $2.99 + $0.50 per Mile ("+s1+" miles) $"+distance);
 			//System.out.println("Total : " + (distance + Double.valueOf(this.getCart().getTotal(this.getCoupon()))));
+			Label saving = new Label("Your Savings: " + this.getCart().getSavings(this.getCoupon()));
+			labels.add(saving);
 			//System.out.println("Your Savings: " + this.getCart().getSavings(this.getCoupon()));
 			//System.out.println("\n\n");
 		}
