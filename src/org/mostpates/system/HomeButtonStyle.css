@@ -17,6 +17,10 @@
 -fx-font-size:7em;
 -fx-text-align:center;	
 }
+#money{
+	-fx-font-size:.83em;
+	
+}
 .image{
 
 }

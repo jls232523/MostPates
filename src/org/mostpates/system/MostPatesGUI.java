@@ -3,16 +3,12 @@ package org.mostpates.system;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.awt.ScrollPane;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
@@ -36,6 +32,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
@@ -142,8 +139,15 @@ public class MostPatesGUI extends Application {
         	primaryStage.setScene(signUp);
 			//Driver2.makeNewCustomer(userFile, c1, in, mySystem); //makes new customer 
         });
-        order.setOnAction((event) -> {
-        	primaryStage.setScene(homepage);
+        placeOrder.setOnAction((event) -> {
+        		ArrayList<Label> label = c1.placeOrder(r);
+        		Alert errorAlert = new Alert(AlertType.INFORMATION);
+    			errorAlert.setHeaderText("ORDER PLACED");
+    			errorAlert.setContentText(label.get(0).getText() +"\n" + label.get(1).getText()+"\n"  + label.get(2).getText()+"\n"  + label.get(3).getText()+"\n"+label.get(4).getText()+"\n" );
+    			errorAlert.showAndWait();
+    			c1.getCart().eraseCart();
+    			primaryStage.setScene(homepage);
+        		
         });
         cart.setOnAction((event)->{
         	try {
@@ -249,7 +253,6 @@ public class MostPatesGUI extends Application {
 	}
 
 	private Scene buildCart(Button placeOrder, Button backC, Restaurant r, Customer c,Stage primaryStage) throws IOException {
-		
 		StackPane sp = new StackPane();
 		GridPane p = new GridPane();
 		GridPane p2 = new GridPane();
@@ -303,9 +306,23 @@ public class MostPatesGUI extends Application {
         	p.add(temp, i+5, j);
         	j++;
         }
+        ArrayList<Label> totals = c.order(r);
+        for(int q = 0; q<totals.size();q++) {
+        	totals.get(q).setId("money");
+        	if(q==2) {
+        		
+        		p.add(totals.get(q), 0, j+1);
+        	}
+        	j++;
+        	if(q==3) {
+        		p.add(totals.get(q), 0, j,4,1);
+        	}
+        	if(q==4) {
+        		p.add(totals.get(q), 0, j);
+        	}
+        }
         URL direct;
 		URLConnection direcConnect;
-		
         String url =("https://maps.googleapis.com/maps/api/staticmap?&size=300x200&maptype=roadmap&markers=color:blue%7Blabel:C%7C"+r.getAddress().replaceAll("\\s+", "")+"&markers=color:red%7Alabel:C%7C"+c1.getAddress().replaceAll("\\s+", "") + "&path=color:0x0000ff|weight:5|"+c1.getAddress().replaceAll("\\s+", "")+"|"+r.getAddress().replaceAll("\\s+", "")+"+&key=AIzaSyBl49PQg0nL_4KAEjWXMB1hFT0xqjdTjco");
         	Image mapp = new Image(url);
         	ImageView mappp = new ImageView(mapp);
