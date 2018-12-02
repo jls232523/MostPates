@@ -2,6 +2,7 @@
   -fx-background-color: #5189e2;
   -fx-text-fill: white;
   -fx-background-radius: 400px;
+  
 
 }
 .button:hover {
@@ -23,7 +24,7 @@
 -fx-font-size: 1.5em;
 }
 #item{
--fx-font-size: 1em;
+-fx-font-size: .9em;
 -fx-text-fill: #072f70;		
 }
 #price
@@ -31,7 +32,11 @@
 	-fx-font-size: .75em;
 -fx-text-fill: #072f70;	
 }
-
+#delete{
+	-fx-background-color: #f73500;
+  -fx-text-fill: white;
+  -fx-background-radius: 400px;
+}
 
 .text-field {
     -fx-background-color: #a9a9a9 ,  #fffff4,  #fffff4;
@@ -41,4 +46,72 @@
 .text-field:focused {
     -fx-background-color: #a9a9a9 , white , white;
     -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+}
+.table-view .column-header,
+.table-view .column-header-background .filler {
+    -fx-background-color:  #072f70; 
+}
+.table-view .column-header .label{
+   -fx-text-fill: white;
+   -fx-font-weight: bold; 
+   -fx-alignment: CENTER_LEFT;
+}
+.table-view .cell{
+   -fx-cell-size: 35;
+  -fx-alignment: center-left;
+  -fx-background-color: #fffff4;
+  -fx-border-color: #fffff4;
+  -fx-text-fill:	#072f70;
+  -fx-alignment: CENTER_LEFT;
+   
+}
+.table-row-cell:selected {
+   -fx-background-color: whitesmoke; 
+   -fx-text-background-color:  #fffff4;
+   
+       
+}
+
+/* scroll bar starts here */
+
+/* The increment and decrement button CSS class of scrollbar */
+.table-view .increment-button ,.table-view .decrement-button {
+    -fx-background-color:transparent;
+	-fx-background-radius: 2em;
+
+}
+
+/* The main scrollbar **track** CSS class  */
+.table-view .scroll-bar:horizontal .track,
+.table-view .scroll-bar:vertical .track{
+	-fx-background-color: transparent;
+	-fx-border-color:derive( #fffff4,80%);
+
+	-fx-background-radius: 2em;
+	-fx-border-radius:2em;
+}
+
+/* The main scrollbar **thumb** CSS class which we drag every time (movable) */
+.table-view .scroll-bar:horizontal .thumb,
+.table-view .scroll-bar:vertical .thumb {
+    -fx-background-color:derive( #fffff4,90%);
+	-fx-background-insets: 2, 0, 0;
+	-fx-background-radius: 2em;
+
+}
+
+/* chart properties */
+
+.chart {
+    -fx-padding: 10px;
+    -fx-background-color: transparent;
+    -fx-legend-visible: false;
+}
+.chart-plot-background {
+    -fx-background-color:transparent;
+}
+
+.chart-pie {
+    -fx-border-color: derive(-fx-pie-color, 1%);
+    -fx-border-width: 0px;
 }

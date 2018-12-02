@@ -16,6 +16,9 @@ import org.mostpates.people.Customer;
 import org.mostpates.shops.Item;
 import org.mostpates.shops.Restaurant;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 public class Driver {
 	public static void main(String[] args) throws IOException {
 		Systems mySystem = new Systems();//make system
@@ -70,7 +73,7 @@ public class Driver {
 				break;
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("add")==0) { //customer wants to add an item 
-				Driver.addItem(i, r, userIn, flag, c1, in);
+				//Driver.addItem(i, r, userIn, flag, c1, in);
 				check = 0;
 			}
 			else if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("cart")==0) { // customer wants to see their cart
@@ -256,28 +259,20 @@ public class Driver {
 		
 	}
 
-	public static void addItem(Item i,Restaurant r, String userIn,int flag,Customer c1,Scanner in) {//add items to a cart
-		System.out.println("Which item do you want to add? (or back to back)");
-		userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");
-		if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0) {
-			flag = 1;	
-		}
-		i = r.getItem(userIn);
-		if(flag==1) {
-			return;
-		}
-		while(i==null) {
-			System.out.println("Not a valid choice please pick again (or back to back)");
-			userIn = in.nextLine().toLowerCase().replaceAll("\\s+","");
-			if(userIn.toLowerCase().replaceAll("\\s+","").compareTo("back")==0) {
-				flag = 1;
-				break;
-			}
-			i = r.getItem(userIn);
-		}
-		if(flag==0) {
+	public static void addItem(Item i,Restaurant r, Customer c1, Alert confirmAlert) {//add items to a cart
 		c1.addToCart(i);
-		}
+		confirmAlert.setAlertType(AlertType.INFORMATION);
+		confirmAlert.setHeaderText("Item Succesfully Added To Cart");
+		confirmAlert.setContentText(i.getName() + " was added to your cart for $" + i.getPrice());
+		confirmAlert.showAndWait();
+	}
+
+	public static void remove(Customer c, Item i, Restaurant r, Alert confirmAlert) {
+		c.removeFromCart(i);
+		confirmAlert.setAlertType(AlertType.INFORMATION);
+		confirmAlert.setHeaderText("Item Succesfully Removed From Cart");
+		confirmAlert.setContentText(i.getName() + " was Removed from your cart");
+		confirmAlert.showAndWait();
 	}
 	}
 

@@ -3,13 +3,19 @@ package org.mostpates.system;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.awt.ScrollPane;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -43,10 +49,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 public class MostPatesGUI extends Application {
-    private static int SIZE_A = 500, SIZE_D = 750;
+    private static int SIZE_A = 500, SIZE_D =750;
     public static Systems mySystem;
     public static Restaurant r;
     public static Customer c1;
@@ -55,16 +63,19 @@ public class MostPatesGUI extends Application {
     public Scene logIn;
     public Scene menu;
     public Scene restaurant;
+    public Scene userCart;
     public static PrintWriter userFile;
     public static String path;
     public static Scanner in;
     public static int userCheck;
-   
+    public static ArrayList<Button> menuButtons;
     static ArrayList<TextField> menuItems;
     TableView<Restaurant> table = new TableView<Restaurant>();
 	Color eggshell = Color.web("0xfffff4");
     public static Alert confirmAlert = new Alert(AlertType.CONFIRMATION);
     public static Alert errorAlert = new Alert(AlertType.WARNING);
+    public WebEngine webEngine;
+    public WebView webView;
     public static void main(String[] args) throws IOException {
 		in = new Scanner(System.in);
 		File currentDir = new File("");
@@ -73,6 +84,7 @@ public class MostPatesGUI extends Application {
 		r = null;
 		c1 = new Customer();
 		menuItems = new ArrayList<TextField>();
+		menuButtons = new ArrayList<Button>();
         launch(args);
     }
 	@Override
@@ -89,6 +101,8 @@ public class MostPatesGUI extends Application {
         Button add = new Button("Add Item");
         Button cart = new Button("Cart");
         Button cartR = new Button("Cart");
+        Button backC = new Button("Back");
+        Button placeOrder = new Button("Place Order");
         TextField name = new TextField();
         TextField nameL = new TextField();
         TextField addr = new TextField();
@@ -98,7 +112,8 @@ public class MostPatesGUI extends Application {
 
         gc.setFill(eggshell);
         gc.fillRect(0, 0, SIZE_A, SIZE_D);
-        primaryStage.show();
+        primaryStage.setResizable(false);
+        primaryStage.show();     
     		mySystem = new Systems();//make system
 		mySystem.buildSystem();
 		signUp = buildSignUp(back,name,addr,phone,submit);
@@ -107,7 +122,7 @@ public class MostPatesGUI extends Application {
         logIn = buildLogin(backL,nameL,submitLog);
         logIn.getStylesheets().add(style);
         homepage.getStylesheets().add(style);
-	
+
         back.setOnAction((event) -> {
         	primaryStage.setScene(homepage);
         });
@@ -120,12 +135,47 @@ public class MostPatesGUI extends Application {
         backM.setOnAction((event) -> {
         	primaryStage.setScene(restaurant);
         });
+        backC.setOnAction((event) -> {
+        	primaryStage.setScene(menu);
+        });
         sign.setOnAction((event) -> {
         	primaryStage.setScene(signUp);
 			//Driver2.makeNewCustomer(userFile, c1, in, mySystem); //makes new customer 
         });
         order.setOnAction((event) -> {
         	primaryStage.setScene(homepage);
+        });
+        cart.setOnAction((event)->{
+        	try {
+				userCart = buildCart(placeOrder,backC,r,c1, primaryStage);
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+			}
+        	userCart.getStylesheets().add(style);
+        	primaryStage.setScene(userCart);
+        
+        });
+        cartR.setOnAction((event)->{
+        	try {
+        	if(Driver.checkCart(c1, r)) {
+        	userCart = buildCart(placeOrder,backC,r,c1, primaryStage);
+        userCart.getStylesheets().add(style);
+        	primaryStage.setScene(userCart);
+        	}
+        	else {
+        		Alert errorAlert = new Alert(AlertType.INFORMATION);
+    			errorAlert.setHeaderText("Cart will be emptied");
+    			errorAlert.setContentText("Your cart has been emptied");
+    			errorAlert.showAndWait();
+        	}
+        	}
+        	catch(Exception e){
+        		Alert errorAlert = new Alert(AlertType.WARNING);
+    			errorAlert.setHeaderText("Empty Cart");
+    			errorAlert.setContentText("Your cart is empty. Please add an item to view.");
+    			errorAlert.showAndWait();
+        	}     	
         });
         submit.setOnAction((event2)->{
     		if(allFieldsFilled(name,addr,phone)) {
@@ -198,16 +248,82 @@ public class MostPatesGUI extends Application {
         });
 	}
 
-	private Scene buildMenu(Restaurant r2, Button backM, Button order, Button add, TextField addField, Button cart) throws FileNotFoundException {
+	private Scene buildCart(Button placeOrder, Button backC, Restaurant r, Customer c,Stage primaryStage) throws IOException {
+		
 		StackPane sp = new StackPane();
 		GridPane p = new GridPane();
 		GridPane p2 = new GridPane();
-		
 		p2.setPadding(new Insets(16,0,0,0));
 		p2.setAlignment(Pos.TOP_CENTER);
 		 p.setAlignment(Pos.TOP_LEFT);
            p.setPadding(new Insets(16));
-           p.setHgap(30);
+           p.setHgap(3);
+           p.setVgap(20);
+           p.setGridLinesVisible(false);
+           p.setBorder(new Border(
+	                new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+	                        CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+		Canvas canvas = new Canvas(SIZE_A, SIZE_D);
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(eggshell);
+        gc.fillRect(0, 0, SIZE_A, SIZE_D);
+       
+        sp.getChildren().add(canvas);
+       
+        sp.getChildren().add(p2);
+        sp.getChildren().add(p);
+        p.add(backC, 0, 0,1,2);
+        p.add(placeOrder, 0, 2);
+        Label rst = new Label(r.getName());
+        int i = 0;
+        int j = 3;
+        p2.getChildren().add(rst);
+        rst.setAlignment(Pos.TOP_CENTER);
+        for(Item i1 : c.cart.getItems()) {
+        	Label item = new Label (i1.getName());
+        	Label price = new Label ("		$" + i1.getPrice());
+        	Button temp = new Button("-");
+        	temp.setId("delete");
+    		temp.setOnAction((event) -> { 
+    			String name = i1.getName();
+    			Driver.remove(c, i1, r,confirmAlert);
+    			try {
+					userCart = buildCart(placeOrder,backC,r,c1, primaryStage);
+					String style = getClass().getResource("HomeButtonStyle.css").toExternalForm();
+					userCart.getStylesheets().add(style);
+					primaryStage.setScene(userCart);	
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		});
+    		
+        	p.add(item, i, j);
+        	p.add(price, i+4, j);
+        	p.add(temp, i+5, j);
+        	j++;
+        }
+        URL direct;
+		URLConnection direcConnect;
+		
+        String url =("https://maps.googleapis.com/maps/api/staticmap?&size=300x200&maptype=roadmap&markers=color:blue%7Blabel:C%7C"+r.getAddress().replaceAll("\\s+", "")+"&markers=color:red%7Alabel:C%7C"+c1.getAddress().replaceAll("\\s+", "") + "&path=color:0x0000ff|weight:5|"+c1.getAddress().replaceAll("\\s+", "")+"|"+r.getAddress().replaceAll("\\s+", "")+"+&key=AIzaSyBl49PQg0nL_4KAEjWXMB1hFT0xqjdTjco");
+        	Image mapp = new Image(url);
+        	ImageView mappp = new ImageView(mapp);
+        p.add(mappp,0,j+2,10,10);    
+        sp.setPadding(new Insets(16));
+       
+		return new Scene(sp);
+	}
+
+	private Scene buildMenu(Restaurant r2, Button backM, Button order, Button add, TextField addField, Button cart) throws FileNotFoundException {
+		StackPane sp = new StackPane();
+		GridPane p = new GridPane();
+		GridPane p2 = new GridPane();
+		p2.setPadding(new Insets(16,0,0,0));
+		p2.setAlignment(Pos.TOP_CENTER);
+		 p.setAlignment(Pos.TOP_LEFT);
+           p.setPadding(new Insets(16));
+           p.setHgap(5);
            p.setVgap(2);
            p.setGridLinesVisible(false);
            p.setBorder(new Border(
@@ -217,15 +333,19 @@ public class MostPatesGUI extends Application {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
         File currentDir = new File("");
         int count = 0;
-        int xPos = 1;
+        int xPos = 2;
         int yPos = 100;
         Label t3 = null;
+        int j = 0;
+        p.add(backM, 0, 0,1,2);
         for (Item i : r2.getMenu()) {
         		if(count % 2 == 0) {
-        			xPos = 1;
+        			xPos = 2;
         			yPos += 4;  			
         		}
         		if((count+1)%2==0) {
+        			
+        			
         			Label t = new Label(" " + i.getName());
         			if(String.valueOf(i.getPrice()).endsWith("0")) {
         			t3 = new Label(" $"+i.getPrice() + "0");
@@ -236,13 +356,29 @@ public class MostPatesGUI extends Application {
             		t.setId("item");
             		t3.setId("price");
             		t.setAlignment(Pos.CENTER);
-            		p.add(t, xPos, yPos,4,1);
+            		p.add(t, xPos, yPos,1,1);         		
             		p.add(t3, xPos, yPos+1);
+            		Button temp = new Button("+");
+            		temp.setOnAction((event) -> { 
+            			if(Driver.checkCart(c1, r2)) {
+            			Driver.addItem(i, r2, c1,confirmAlert);
+            			}
+            			else {
+            				Alert errorAlert = new Alert(AlertType.WARNING);
+                			errorAlert.setHeaderText("Cart Emptied"); 
+                			errorAlert.setContentText("Your cart has been emptied.");
+                			errorAlert.showAndWait();
+            			}
+                    });
+            		temp.setMaxSize(5, 5);
+            		p.add(temp,xPos-1, yPos,1,2
+            				);
             		TextField t2 = new TextField();
             		t2.setId(i.getName());
             		menuItems.add(t2);
-            		xPos += 4;
+            		xPos += 1;
             		count+=1;
+            		menuButtons.add(temp);
         		}
         		else {
         			Label t = new Label(i.getName());
@@ -252,29 +388,47 @@ public class MostPatesGUI extends Application {
             			else {
             				t3 = new Label(" $"+i.getPrice());
             			}
+
+        			j+=1;
         			t3.setId("price");
             		t.setId("item");
             		t.setAlignment(Pos.CENTER);
-            		p.add(t, xPos, yPos,4,1);
+            		p.add(t, xPos, yPos,1,1);
             		p.add(t3, xPos, yPos+1);
+            		Button temp = new Button("+");
+            		temp.setOnAction((event) -> { 
+            			if(Driver.checkCart(c1, r2)) {
+            			Driver.addItem(i, r2, c1,confirmAlert);
+            			}
+            			else {
+            				Alert errorAlert = new Alert(AlertType.WARNING);
+                			errorAlert.setHeaderText("Cart Emptied"); 
+                			errorAlert.setContentText("Your cart has been emptied.");
+                			errorAlert.showAndWait();
+                			c1.getCart().eraseCart();
+                			Driver.addItem(i, r2, c1,confirmAlert);
+            			}
+                    });
+            		p.add(temp, 1, yPos,1,2);
             		TextField t2 = new TextField();
             		t2.setId(i.getName());
             		menuItems.add(t2);
             		xPos += 4;
             		count+=1;
+            		menuButtons.add(temp);
         		}
+        		
+
         }
 	
-        
+      
         p2.add(r2.getImage(), 0, 0);
 		gc.setFill(eggshell);
         gc.fillRect(0, 0, SIZE_A, SIZE_D);
         sp.getChildren().add(canvas);
         sp.getChildren().add(p2);
         sp.getChildren().add(p);
-        p.add(backM, 0, 0);
-        p.add(order, 1, yPos+10);
-        p.add(add, 5, yPos + 10);
+        
         p.add(cart, 0, 2);
         sp.setPadding(new Insets(16));
         
@@ -313,8 +467,8 @@ public class MostPatesGUI extends Application {
         table.getColumns().setAll(firstNameCol, distanceCol);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
        	p.add(table,8,8);
-       	table.maxWidth(1200);
-       	table.setMaxHeight(255);
+       	table.maxWidth(3000);
+       	table.setMaxHeight(500);
        	table.setEditable(false);
        	p.add(cartR, 0, 1);
 		return (new Scene(sp));
